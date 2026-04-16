@@ -1,0 +1,216 @@
+
+<style>
+:root { --accent: #185FA5; --accent-light: #E6F1FB; --accent-dark: #0C447C; --ok: #3B6D11; --ok-light: #EAF3DE; --warn: #854F0B; --warn-light: #FAEEDA; --danger: #A32D2D; --danger-light: #FCEBEB; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); font-size: 15px; color: var(--color-text-primary); }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 0.5rem 0 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 1rem; }
+.tab { padding: 6px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); cursor: pointer; font-size: 13px; color: var(--color-text-secondary); transition: all 0.15s; }
+.tab.active { background: var(--accent); color: white; border-color: var(--accent); font-weight: 500; }
+.section { display: none; }
+.section.active { display: block; }
+h2 { font-size: 16px; font-weight: 500; margin-bottom: 12px; color: var(--color-text-primary); }
+h3 { font-size: 14px; font-weight: 500; margin: 14px 0 6px; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; margin-right: 4px; }
+.b-blue { background: var(--accent-light); color: var(--accent-dark); }
+.b-green { background: var(--ok-light); color: var(--ok); }
+.b-warn { background: var(--warn-light); color: var(--warn); }
+.b-red { background: var(--danger-light); color: var(--danger); }
+.item { padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 14px; line-height: 1.5; }
+.item:last-child { border-bottom: none; padding-bottom: 0; }
+.item strong { font-weight: 500; }
+.nb { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
+.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; }
+.metric .num { font-size: 22px; font-weight: 500; }
+.metric .lbl { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 2px; }
+.q { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; margin-bottom: 10px; font-size: 14px; line-height: 1.6; }
+.q .qt { font-weight: 500; margin-bottom: 4px; }
+.ans { font-size: 13px; color: var(--color-text-secondary); border-top: 0.5px solid var(--color-border-tertiary); margin-top: 8px; padding-top: 8px; display: none; }
+.show-ans { font-size: 12px; color: var(--accent); cursor: pointer; margin-top: 6px; display: inline-block; }
+.timeline { position: relative; padding-left: 20px; }
+.timeline::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 1px; background: var(--color-border-secondary); }
+.tl-item { position: relative; margin-bottom: 14px; }
+.tl-item::before { content: ''; position: absolute; left: -16px; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.tl-item .time { font-size: 12px; font-weight: 500; color: var(--accent); margin-bottom: 2px; }
+.tl-item .desc { font-size: 13px; line-height: 1.5; }
+</style>
+
+<h2 style="margin-bottom: 6px;">Kit Prova — RC 1º Bimestre</h2>
+<p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">8 aulas · Fundamentos e Modelos · Clique nas abas para navegar</p>
+
+<div class="tabs">
+  <div class="tab active" onclick="show('prompt')">Prompt NotebookLM</div>
+  <div class="tab" onclick="show('resumo')">Resumo</div>
+  <div class="tab" onclick="show('essencial')">Essencial Prova</div>
+  <div class="tab" onclick="show('exercicios')">Exercícios</div>
+  <div class="tab" onclick="show('revisao')">Revisão 24h</div>
+</div>
+
+<div id="prompt" class="section active">
+  <div class="card">
+    <h3>Prompt para NotebookLM</h3>
+    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 10px;">Copie e cole no NotebookLM após adicionar os materiais do 1º bim como fonte.</p>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; font-size: 13px; line-height: 1.7; border-left: 3px solid var(--accent);">
+      Você é meu professor de Redes de Computadores para prova em menos de 24h.<br><br>
+      Regras:<br>
+      - Linguagem simples, exemplos do cotidiano<br>
+      - Foco em o que cai na prova<br>
+      - Sem enrolação<br><br>
+      Quando eu disser "Ensina [tema]": explique em 3 parágrafos curtos + 1 exemplo + 1 pergunta de fixação.<br>
+      Quando eu disser "Quiz [tema]": me faça 5 questões estilo prova + corrija minhas respostas.<br>
+      Quando eu disser "Revisão rápida": liste os 5 pontos mais cobrados do tema em tópicos curtos.<br>
+      Quando eu disser "Compara [A] e [B]": tabela comparativa direto ao ponto.<br><br>
+      Temas do 1º bim: Introdução/Classificação, Topologias, Modelo OSI (7 camadas), TCP/IP (4 camadas), Meios de Transmissão, Ethernet/CSMA-CD, Wi-Fi 802.11, MAC e ARP.<br><br>
+      Comece me perguntando: qual tema é mais urgente para eu estudar primeiro?
+    </div>
+  </div>
+</div>
+
+<div id="resumo" class="section">
+  <div class="grid2">
+    <div class="metric"><div class="lbl">Aulas</div><div class="num">8</div></div>
+    <div class="metric"><div class="lbl">Temas-chave</div><div class="num">5</div></div>
+  </div>
+
+  <div class="card">
+    <span class="badge b-red">Alta prioridade</span>
+    <div class="item"><strong>Modelo OSI — 7 camadas</strong><div class="nb">Física · Enlace · Rede · Transporte · Sessão · Apresentação · Aplicação. Decorar funções + PDU de cada camada.</div></div>
+    <div class="item"><strong>TCP/IP — 4 camadas</strong><div class="nb">Acesso à rede · Internet · Transporte · Aplicação. Saber comparar com OSI.</div></div>
+    <div class="item"><strong>Endereço MAC + ARP</strong><div class="nb">MAC = endereço físico 48 bits (6 bytes, hex). ARP = resolve IP → MAC. Tabela ARP.</div></div>
+  </div>
+
+  <div class="card">
+    <span class="badge b-warn">Média prioridade</span>
+    <div class="item"><strong>Topologias</strong><div class="nb">Estrela (mais usada), Barramento, Anel, Malha. Diferença física vs lógica.</div></div>
+    <div class="item"><strong>Meios de transmissão</strong><div class="nb">Par trançado UTP/STP (Cat5e, Cat6), Coaxial, Fibra óptica (maior velocidade/distância).</div></div>
+    <div class="item"><strong>Ethernet — IEEE 802.3</strong><div class="nb">CSMA/CD: detecta colisão antes de transmitir. Quadro Ethernet: MAC destino + MAC origem + dados.</div></div>
+  </div>
+
+  <div class="card">
+    <span class="badge b-blue">Base</span>
+    <div class="item"><strong>Classificação de redes</strong><div class="nb">PAN (pessoal) · LAN (local) · MAN (metropolitana) · WAN (ampla/internet)</div></div>
+    <div class="item"><strong>Wi-Fi — IEEE 802.11</strong><div class="nb">Padrões: b(11Mbps) · g(54Mbps) · n(300Mbps) · ac(Gbps) · ax(Wi-Fi 6). Segurança: WEP (fraco) → WPA → WPA2 (atual).</div></div>
+  </div>
+</div>
+
+<div id="essencial" class="section">
+  <div class="card">
+    <h3>O que cai com certeza</h3>
+    <div class="item"><span class="badge b-red">1</span> <strong>Camadas OSI em ordem</strong> — nome, função, PDU (bit/frame/pacote/segmento/dado)<div class="nb">Macete: "Por Favor Do Not Throw Sausage Pizza" (Física→Aplicação)</div></div>
+    <div class="item"><span class="badge b-red">2</span> <strong>Diferença OSI vs TCP/IP</strong> — OSI=7 camadas (modelo referência), TCP/IP=4 camadas (modelo real)</div>
+    <div class="item"><span class="badge b-red">3</span> <strong>Encapsulamento</strong> — dados descem adicionando cabeçalho em cada camada, sobem removendo</div>
+    <div class="item"><span class="badge b-red">4</span> <strong>MAC vs IP</strong> — MAC=físico/permanente/camada 2, IP=lógico/pode mudar/camada 3</div>
+    <div class="item"><span class="badge b-warn">5</span> <strong>CSMA/CD</strong> — Carrier Sense Multiple Access with Collision Detection. Usado no Ethernet cabeado.</div>
+    <div class="item"><span class="badge b-warn">6</span> <strong>Topologia estrela</strong> — switch no centro, mais usada hoje. Falha de 1 cabo não derruba a rede.</div>
+    <div class="item"><span class="badge b-warn">7</span> <strong>Fibra óptica</strong> — maior velocidade, maior distância, imune a interferência eletromagnética</div>
+    <div class="item"><span class="badge b-blue">8</span> <strong>WPA2</strong> — padrão de segurança Wi-Fi atual. WEP = obsoleto/inseguro.</div>
+  </div>
+
+  <div class="card">
+    <h3>Tabela OSI — Decorar isso</h3>
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+        <tr style="background: var(--color-background-secondary);">
+          <th style="padding: 6px 8px; text-align: left; font-weight: 500;">#</th>
+          <th style="padding: 6px 8px; text-align: left; font-weight: 500;">Camada</th>
+          <th style="padding: 6px 8px; text-align: left; font-weight: 500;">PDU</th>
+          <th style="padding: 6px 8px; text-align: left; font-weight: 500;">Dispositivo</th>
+        </tr>
+        <tr><td style="padding:5px 8px;">7</td><td>Aplicação</td><td>Dado</td><td>—</td></tr>
+        <tr style="background: var(--color-background-secondary);"><td style="padding:5px 8px;">6</td><td>Apresentação</td><td>Dado</td><td>—</td></tr>
+        <tr><td style="padding:5px 8px;">5</td><td>Sessão</td><td>Dado</td><td>—</td></tr>
+        <tr style="background: var(--color-background-secondary);"><td style="padding:5px 8px;">4</td><td>Transporte</td><td>Segmento</td><td>—</td></tr>
+        <tr><td style="padding:5px 8px;">3</td><td>Rede</td><td>Pacote</td><td>Roteador</td></tr>
+        <tr style="background: var(--color-background-secondary);"><td style="padding:5px 8px;">2</td><td>Enlace</td><td>Frame/Quadro</td><td>Switch</td></tr>
+        <tr><td style="padding:5px 8px;">1</td><td>Física</td><td>Bit</td><td>Hub/Cabo</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="exercicios" class="section">
+  <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">Responda mentalmente, depois clique em "Ver resposta".</p>
+
+  <div class="q">
+    <div class="qt">1. Qual camada OSI é responsável pelo endereçamento lógico (IP) e roteamento?</div>
+    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
+    <div class="ans">Camada 3 — Rede. Dispositivo: Roteador. PDU: Pacote.</div>
+  </div>
+
+  <div class="q">
+    <div class="qt">2. Qual a diferença entre Hub e Switch?</div>
+    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
+    <div class="ans">Hub repassa dados para todas as portas (broadcast físico, causa colisões). Switch aprende endereços MAC e envia só para a porta correta — mais eficiente.</div>
+  </div>
+
+  <div class="q">
+    <div class="qt">3. Um técnico precisa ligar 4 computadores numa rede local simples. Qual topologia é mais indicada e por quê?</div>
+    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
+    <div class="ans">Estrela. Fácil de gerenciar, falha de 1 cabo não derruba os outros, e switch centraliza o tráfego com eficiência.</div>
+  </div>
+
+  <div class="q">
+    <div class="qt">4. O que o protocolo ARP faz, em uma frase?</div>
+    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
+    <div class="ans">ARP resolve um endereço IP em endereço MAC — pergunta "quem tem o IP X?" e recebe de volta o MAC do dono.</div>
+  </div>
+
+  <div class="q">
+    <div class="qt">5. Associe: IEEE 802.3 / IEEE 802.11 → Ethernet cabeada / Wi-Fi</div>
+    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
+    <div class="ans">IEEE 802.3 = Ethernet (cabeada). IEEE 802.11 = Wi-Fi (sem fio).</div>
+  </div>
+
+  <div class="q">
+    <div class="qt">6. Quantas e quais são as camadas do modelo TCP/IP?</div>
+    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
+    <div class="ans">4 camadas: (1) Acesso à Rede, (2) Internet, (3) Transporte, (4) Aplicação.</div>
+  </div>
+
+  <div class="q">
+    <div class="qt">7. Por que a fibra óptica é preferida em longas distâncias?</div>
+    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
+    <div class="ans">Usa luz (não elétricidade), logo: altíssima velocidade, grandes distâncias sem perda de sinal, imune a interferência eletromagnética.</div>
+  </div>
+
+  <div class="q">
+    <div class="qt">8. O que é CSMA/CD e em qual tecnologia é usado?</div>
+    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
+    <div class="ans">Carrier Sense Multiple Access with Collision Detection — mecanismo do Ethernet cabeado que "escuta" o meio antes de transmitir e detecta colisões. Usado no IEEE 802.3.</div>
+  </div>
+</div>
+
+<div id="revisao" class="section">
+  <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">Estratégia blocos de estudo — 24h antes da prova.</p>
+  <div class="card timeline">
+    <div class="tl-item"><div class="time">Hora 1–2</div><div class="desc"><strong>OSI e TCP/IP</strong> — Desenhe as camadas à mão. Anote PDU e dispositivo de cada camada OSI. Compare com TCP/IP.</div></div>
+    <div class="tl-item"><div class="time">Hora 3–4</div><div class="desc"><strong>MAC, ARP e Ethernet</strong> — Entenda o fluxo: IP conhecido → ARP → MAC obtido → frame Ethernet enviado. CSMA/CD: escreva com suas palavras.</div></div>
+    <div class="tl-item"><div class="time">Hora 5–6</div><div class="desc"><strong>Topologias e Meios</strong> — Desenhe cada topologia. Monte tabela: Par trançado / Coaxial / Fibra → velocidade, distância, uso.</div></div>
+    <div class="tl-item"><div class="time">Hora 7</div><div class="desc"><strong>Wi-Fi e classificação LAN/MAN/WAN</strong> — Padrões 802.11 (b/g/n/ac/ax), segurança WEP→WPA2. Exemplos reais de PAN/LAN/MAN/WAN.</div></div>
+    <div class="tl-item"><div class="time">Hora 8</div><div class="desc"><strong>Quiz total</strong> — Faça todos os 8 exercícios desta aba sem ver as respostas. Errou? Relê só aquele ponto. Dorme com isso fresco.</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Macetes rápidos</h3>
+    <div class="item"><strong>Camadas OSI (7→1):</strong> "Por Favor Do Not Throw Sausage Pizza" — Aplicação, Apresentação, Sessão, Transporte, Rede, Enlace, Física</div>
+    <div class="item"><strong>MAC = placa; IP = endereço da casa.</strong> A placa não muda, o endereço pode mudar.</div>
+    <div class="item"><strong>Switch = inteligente (MAC table); Hub = burro (manda pra todos).</strong></div>
+    <div class="item"><strong>Fibra = luz = rápido = longe = caro.</strong> UTP = elétrico = barato = curto.</div>
+    <div class="item"><strong>WEP morreu. WPA2 vive.</strong></div>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+function toggle(el) {
+  const ans = el.nextElementSibling;
+  if (ans.style.display === 'block') { ans.style.display = 'none'; el.textContent = 'Ver resposta'; }
+  else { ans.style.display = 'block'; el.textContent = 'Ocultar'; }
+}
+</script>
