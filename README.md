@@ -1,2 +1,2 @@
-# rc-skill
+# py-skill
 Revisãozinha sobre python
