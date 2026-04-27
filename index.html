@@ -1,216 +1,1393 @@
-
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CODEQUEST — Aprenda a Programar</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
 <style>
-:root { --accent: #185FA5; --accent-light: #E6F1FB; --accent-dark: #0C447C; --ok: #3B6D11; --ok-light: #EAF3DE; --warn: #854F0B; --warn-light: #FAEEDA; --danger: #A32D2D; --danger-light: #FCEBEB; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font-sans); font-size: 15px; color: var(--color-text-primary); }
-.tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 0.5rem 0 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 1rem; }
-.tab { padding: 6px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); cursor: pointer; font-size: 13px; color: var(--color-text-secondary); transition: all 0.15s; }
-.tab.active { background: var(--accent); color: white; border-color: var(--accent); font-weight: 500; }
-.section { display: none; }
-.section.active { display: block; }
-h2 { font-size: 16px; font-weight: 500; margin-bottom: 12px; color: var(--color-text-primary); }
-h3 { font-size: 14px; font-weight: 500; margin: 14px 0 6px; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
-.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
-.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; margin-right: 4px; }
-.b-blue { background: var(--accent-light); color: var(--accent-dark); }
-.b-green { background: var(--ok-light); color: var(--ok); }
-.b-warn { background: var(--warn-light); color: var(--warn); }
-.b-red { background: var(--danger-light); color: var(--danger); }
-.item { padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 14px; line-height: 1.5; }
-.item:last-child { border-bottom: none; padding-bottom: 0; }
-.item strong { font-weight: 500; }
-.nb { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; }
-.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
-.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; }
-.metric .num { font-size: 22px; font-weight: 500; }
-.metric .lbl { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 2px; }
-.q { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 14px; margin-bottom: 10px; font-size: 14px; line-height: 1.6; }
-.q .qt { font-weight: 500; margin-bottom: 4px; }
-.ans { font-size: 13px; color: var(--color-text-secondary); border-top: 0.5px solid var(--color-border-tertiary); margin-top: 8px; padding-top: 8px; display: none; }
-.show-ans { font-size: 12px; color: var(--accent); cursor: pointer; margin-top: 6px; display: inline-block; }
-.timeline { position: relative; padding-left: 20px; }
-.timeline::before { content: ''; position: absolute; left: 6px; top: 0; bottom: 0; width: 1px; background: var(--color-border-secondary); }
-.tl-item { position: relative; margin-bottom: 14px; }
-.tl-item::before { content: ''; position: absolute; left: -16px; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-.tl-item .time { font-size: 12px; font-weight: 500; color: var(--accent); margin-bottom: 2px; }
-.tl-item .desc { font-size: 13px; line-height: 1.5; }
+  :root {
+    --bg: #0a0a0a;
+    --fg: #f0ece0;
+    --accent: #e8ff3c;
+    --accent2: #ff5c35;
+    --accent3: #3cffe0;
+    --muted: #555;
+    --border: #222;
+    --card: #111;
+    --python: #3cffe0;
+    --java: #ff5c35;
+    --success: #a8ff3c;
+    --error: #ff3c5c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── CURSOR PERSONALIZADO ── */
+  body * { cursor: none !important; }
+  #cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform .15s, background .2s;
+    mix-blend-mode: difference;
+  }
+  #cursor.big { transform: scale(5); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,10,.92);
+    backdrop-filter: blur(10px);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -.02em;
+    color: var(--accent);
+  }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-size: .7rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--fg); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 8rem 2.5rem 4rem;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: .3;
+  }
+  .hero-tag {
+    font-size: .65rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+  }
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    background: var(--muted);
+  }
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3.5rem, 10vw, 9rem);
+    line-height: .92;
+    letter-spacing: -.04em;
+    margin-bottom: 2rem;
+  }
+  .hero-title .line { display: block; overflow: hidden; }
+  .hero-title .accent { color: var(--accent); }
+  .hero-title .outline {
+    -webkit-text-stroke: 1px var(--fg);
+    color: transparent;
+  }
+  .hero-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  .hero-desc {
+    max-width: 420px;
+    font-size: .85rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .9rem 2rem;
+    border: 1px solid currentColor;
+    text-decoration: none;
+    transition: all .2s;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .btn-python { color: var(--python); }
+  .btn-python:hover { background: var(--python); color: var(--bg); }
+  .btn-java { color: var(--java); }
+  .btn-java:hover { background: var(--java); color: var(--bg); }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    right: 2.5rem;
+    font-size: .6rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    writing-mode: vertical-rl;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 3rem;
+    background: var(--muted);
+    animation: scrollLine 1.5s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%,100% { opacity: .3; }
+    50% { opacity: 1; }
+  }
+
+  /* TYPING ANIMATION */
+  .typing-demo {
+    font-family: 'Syne Mono', monospace;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--accent);
+    min-height: 2em;
+    margin-top: 1rem;
+    position: relative;
+  }
+  .typing-demo::after {
+    content: '|';
+    animation: blink .7s step-end infinite;
+    margin-left: 2px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── LANGUAGE SELECT ── */
+  #language-select {
+    padding: 6rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label {
+    font-size: .65rem;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .lang-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .lang-card {
+    background: var(--bg);
+    padding: 3rem 2.5rem;
+    cursor: pointer;
+    transition: background .25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .lang-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .lang-card.python::before { background: radial-gradient(circle at 30% 50%, rgba(60,255,224,.06) 0%, transparent 70%); }
+  .lang-card.java::before { background: radial-gradient(circle at 30% 50%, rgba(255,92,53,.06) 0%, transparent 70%); }
+  .lang-card:hover::before { opacity: 1; }
+  .lang-card:hover { background: #111; }
+  .lang-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+  }
+  .lang-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: -.03em;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+  .lang-card.python .lang-name { color: var(--python); }
+  .lang-card.java .lang-name { color: var(--java); }
+  .lang-desc { font-size: .8rem; line-height: 1.7; color: var(--muted); max-width: 340px; }
+  .lang-levels {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+  }
+  .level-badge {
+    font-size: .6rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .3rem .7rem;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .lang-arrow {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    font-size: 1.5rem;
+    transition: transform .3s;
+    color: var(--muted);
+  }
+  .lang-card:hover .lang-arrow { transform: translate(4px, -4px); }
+
+  /* ── GAME AREA ── */
+  #game-area {
+    padding: 0 2.5rem 6rem;
+    display: none;
+  }
+  #game-area.active { display: block; }
+
+  .game-header {
+    padding: 4rem 0 3rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .game-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 4rem);
+    letter-spacing: -.04em;
+    line-height: 1;
+  }
+  .game-lang-badge {
+    font-size: .7rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    padding: .4rem 1rem;
+    border: 1px solid currentColor;
+    display: inline-block;
+    margin-bottom: .8rem;
+  }
+  .game-lang-badge.python { color: var(--python); }
+  .game-lang-badge.java { color: var(--java); }
+
+  /* LEVEL TABS */
+  .level-tabs {
+    display: flex;
+    gap: 1px;
+    border: 1px solid var(--border);
+    background: var(--border);
+    margin-bottom: 3rem;
+  }
+  .level-tab {
+    flex: 1;
+    padding: 1rem;
+    text-align: center;
+    font-size: .7rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    background: var(--bg);
+    cursor: pointer;
+    transition: all .2s;
+    color: var(--muted);
+    border: none;
+    font-family: 'Space Mono', monospace;
+  }
+  .level-tab.active { background: var(--accent); color: var(--bg); }
+  .level-tab:hover:not(.active) { background: #111; color: var(--fg); }
+
+  /* CHALLENGE CARD */
+  .challenge-card {
+    border: 1px solid var(--border);
+    background: var(--card);
+    margin-bottom: 2rem;
+    display: none;
+  }
+  .challenge-card.active { display: block; }
+  .challenge-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .challenge-type {
+    font-size: .6rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .type-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .challenge-num {
+    font-family: 'Syne Mono', monospace;
+    font-size: .7rem;
+    color: var(--muted);
+  }
+  .challenge-body { padding: 2rem; }
+  .challenge-question {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    line-height: 1.3;
+    margin-bottom: 1rem;
+  }
+  .challenge-context {
+    font-size: .8rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  /* CODE DISPLAY */
+  .code-block {
+    background: #000;
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    font-family: 'Syne Mono', monospace;
+    font-size: .82rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow-x: auto;
+  }
+  .code-block .kw { color: #c792ea; }
+  .code-block .fn { color: #82aaff; }
+  .code-block .str { color: #c3e88d; }
+  .code-block .num { color: #f78c6c; }
+  .code-block .cm { color: #546e7a; }
+  .code-block .blank {
+    display: inline-block;
+    min-width: 80px;
+    border-bottom: 2px solid var(--accent);
+    background: rgba(232,255,60,.08);
+    padding: 0 4px;
+    color: var(--accent);
+  }
+
+  /* EDITOR */
+  .editor-wrap {
+    border: 1px solid var(--border);
+    background: #000;
+    margin-bottom: 1rem;
+  }
+  .editor-bar {
+    padding: .6rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: #0d0d0d;
+  }
+  .editor-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .editor-dot:nth-child(1) { background: #ff5f57; }
+  .editor-dot:nth-child(2) { background: #febc2e; }
+  .editor-dot:nth-child(3) { background: #28c840; }
+  .editor-filename {
+    font-size: .65rem;
+    color: var(--muted);
+    margin-left: .5rem;
+    letter-spacing: .05em;
+  }
+  .code-editor {
+    width: 100%;
+    min-height: 140px;
+    background: transparent;
+    border: none;
+    color: var(--fg);
+    font-family: 'Syne Mono', monospace;
+    font-size: .85rem;
+    line-height: 1.8;
+    padding: 1.5rem;
+    resize: vertical;
+    outline: none;
+    tab-size: 4;
+  }
+
+  /* MULTIPLE CHOICE */
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .8rem;
+    margin-bottom: 1.5rem;
+  }
+  .choice-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--fg);
+    font-family: 'Space Mono', monospace;
+    font-size: .78rem;
+    padding: 1rem 1.2rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all .2s;
+    line-height: 1.5;
+  }
+  .choice-btn:hover { border-color: var(--fg); background: #111; }
+  .choice-btn.correct { border-color: var(--success); background: rgba(168,255,60,.08); color: var(--success); }
+  .choice-btn.wrong { border-color: var(--error); background: rgba(255,60,92,.08); color: var(--error); }
+
+  /* FILL IN THE BLANKS */
+  .fill-input {
+    background: rgba(232,255,60,.05);
+    border: 1px solid var(--accent);
+    border-radius: 0;
+    color: var(--accent);
+    font-family: 'Syne Mono', monospace;
+    font-size: .85rem;
+    padding: .3rem .6rem;
+    outline: none;
+    min-width: 100px;
+    max-width: 160px;
+  }
+  .fill-input:focus { background: rgba(232,255,60,.1); }
+
+  /* ACTIONS */
+  .challenge-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .run-btn {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .9rem 2rem;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .run-btn:hover { background: var(--fg); }
+  .run-btn:active { transform: scale(.98); }
+  .next-btn {
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .9rem 2rem;
+    cursor: pointer;
+    transition: all .2s;
+    display: none;
+  }
+  .next-btn:hover { border-color: var(--fg); }
+  .next-btn.show { display: inline-flex; align-items: center; gap: .5rem; }
+  .back-lang-btn {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .9rem 2rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .back-lang-btn:hover { color: var(--fg); border-color: var(--fg); }
+
+  /* FEEDBACK */
+  .feedback-box {
+    border: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    margin-top: 1rem;
+    display: none;
+    animation: slideUp .3s ease;
+  }
+  .feedback-box.show { display: block; }
+  .feedback-box.success { border-color: var(--success); background: rgba(168,255,60,.04); }
+  .feedback-box.error { border-color: var(--error); background: rgba(255,60,92,.04); }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-status {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: .5rem;
+  }
+  .feedback-box.success .feedback-status { color: var(--success); }
+  .feedback-box.error .feedback-status { color: var(--error); }
+  .feedback-text { font-size: .8rem; line-height: 1.8; color: var(--muted); }
+  .feedback-text code {
+    font-family: 'Syne Mono', monospace;
+    color: var(--accent);
+    background: rgba(232,255,60,.08);
+    padding: .1rem .3rem;
+  }
+
+  /* PROGRESS */
+  .progress-wrap {
+    margin-bottom: 2rem;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: .65rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .5rem;
+  }
+  .progress-bar {
+    height: 2px;
+    background: var(--border);
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width .4s ease;
+  }
+
+  /* SCORE */
+  .score-display {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.1rem;
+  }
+  .score-display span { color: var(--accent); }
+
+  /* CELEBRATION */
+  #celebration {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 200;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+  }
+  #celebration.show { display: flex; }
+  .cel-emoji { font-size: 5rem; margin-bottom: 1rem; }
+  .cel-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    letter-spacing: -.04em;
+    line-height: .9;
+    margin-bottom: 1rem;
+  }
+  .cel-title .acc { color: var(--accent); }
+  .cel-sub { font-size: .85rem; color: var(--muted); margin-bottom: 2rem; }
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 199;
+  }
+
+  /* ── HOW IT WORKS ── */
+  #how {
+    padding: 6rem 2.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+  .how-item {
+    background: var(--bg);
+    padding: 2.5rem 2rem;
+  }
+  .how-num {
+    font-family: 'Syne Mono', monospace;
+    font-size: 3rem;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+  .how-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: .5rem;
+  }
+  .how-desc { font-size: .78rem; color: var(--muted); line-height: 1.7; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 3rem 2.5rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    color: var(--accent);
+    font-size: 1rem;
+  }
+  .footer-text { font-size: .7rem; color: var(--muted); }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { display: none; }
+    #hero, #language-select, #game-area, #how { padding-left: 1.2rem; padding-right: 1.2rem; }
+    .lang-cards { grid-template-columns: 1fr; }
+    .choices { grid-template-columns: 1fr; }
+    .hero-title { font-size: clamp(2.5rem, 14vw, 5rem); }
+  }
+
+  /* ANIMATED ENTRANCE */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: none; }
 </style>
+</head>
+<body>
 
-<h2 style="margin-bottom: 6px;">Kit Prova — RC 1º Bimestre</h2>
-<p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">8 aulas · Fundamentos e Modelos · Clique nas abas para navegar</p>
+<div id="cursor"></div>
 
-<div class="tabs">
-  <div class="tab active" onclick="show('prompt')">Prompt NotebookLM</div>
-  <div class="tab" onclick="show('resumo')">Resumo</div>
-  <div class="tab" onclick="show('essencial')">Essencial Prova</div>
-  <div class="tab" onclick="show('exercicios')">Exercícios</div>
-  <div class="tab" onclick="show('revisao')">Revisão 24h</div>
-</div>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">CODEQUEST</div>
+  <div class="nav-links">
+    <a href="#language-select">Linguagens</a>
+    <a href="#how">Como Funciona</a>
+  </div>
+</nav>
 
-<div id="prompt" class="section active">
-  <div class="card">
-    <h3>Prompt para NotebookLM</h3>
-    <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 10px;">Copie e cole no NotebookLM após adicionar os materiais do 1º bim como fonte.</p>
-    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; font-size: 13px; line-height: 1.7; border-left: 3px solid var(--accent);">
-      Você é meu professor de Redes de Computadores para prova em menos de 24h.<br><br>
-      Regras:<br>
-      - Linguagem simples, exemplos do cotidiano<br>
-      - Foco em o que cai na prova<br>
-      - Sem enrolação<br><br>
-      Quando eu disser "Ensina [tema]": explique em 3 parágrafos curtos + 1 exemplo + 1 pergunta de fixação.<br>
-      Quando eu disser "Quiz [tema]": me faça 5 questões estilo prova + corrija minhas respostas.<br>
-      Quando eu disser "Revisão rápida": liste os 5 pontos mais cobrados do tema em tópicos curtos.<br>
-      Quando eu disser "Compara [A] e [B]": tabela comparativa direto ao ponto.<br><br>
-      Temas do 1º bim: Introdução/Classificação, Topologias, Modelo OSI (7 camadas), TCP/IP (4 camadas), Meios de Transmissão, Ethernet/CSMA-CD, Wi-Fi 802.11, MAC e ARP.<br><br>
-      Comece me perguntando: qual tema é mais urgente para eu estudar primeiro?
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-tag">Plataforma de ensino interativo — 2026</div>
+  <h1 class="hero-title">
+    <span class="line">Aprenda a</span>
+    <span class="line accent">programar</span>
+    <span class="line outline">jogando.</span>
+  </h1>
+  <div class="typing-demo" id="typingDemo"></div>
+  <div class="hero-bottom">
+    <p class="hero-desc">
+      Desafios práticos, feedback imediato e uma curva de aprendizado que respeita o seu ritmo. Lógica de programação na forma mais direta possível.
+    </p>
+    <div class="hero-cta">
+      <a href="#language-select" class="btn btn-python">▶ Python</a>
+      <a href="#language-select" class="btn btn-java">▶ Java</a>
     </div>
   </div>
-</div>
+  <div class="hero-scroll">scroll</div>
+</section>
 
-<div id="resumo" class="section">
-  <div class="grid2">
-    <div class="metric"><div class="lbl">Aulas</div><div class="num">8</div></div>
-    <div class="metric"><div class="lbl">Temas-chave</div><div class="num">5</div></div>
-  </div>
-
-  <div class="card">
-    <span class="badge b-red">Alta prioridade</span>
-    <div class="item"><strong>Modelo OSI — 7 camadas</strong><div class="nb">Física · Enlace · Rede · Transporte · Sessão · Apresentação · Aplicação. Decorar funções + PDU de cada camada.</div></div>
-    <div class="item"><strong>TCP/IP — 4 camadas</strong><div class="nb">Acesso à rede · Internet · Transporte · Aplicação. Saber comparar com OSI.</div></div>
-    <div class="item"><strong>Endereço MAC + ARP</strong><div class="nb">MAC = endereço físico 48 bits (6 bytes, hex). ARP = resolve IP → MAC. Tabela ARP.</div></div>
-  </div>
-
-  <div class="card">
-    <span class="badge b-warn">Média prioridade</span>
-    <div class="item"><strong>Topologias</strong><div class="nb">Estrela (mais usada), Barramento, Anel, Malha. Diferença física vs lógica.</div></div>
-    <div class="item"><strong>Meios de transmissão</strong><div class="nb">Par trançado UTP/STP (Cat5e, Cat6), Coaxial, Fibra óptica (maior velocidade/distância).</div></div>
-    <div class="item"><strong>Ethernet — IEEE 802.3</strong><div class="nb">CSMA/CD: detecta colisão antes de transmitir. Quadro Ethernet: MAC destino + MAC origem + dados.</div></div>
-  </div>
-
-  <div class="card">
-    <span class="badge b-blue">Base</span>
-    <div class="item"><strong>Classificação de redes</strong><div class="nb">PAN (pessoal) · LAN (local) · MAN (metropolitana) · WAN (ampla/internet)</div></div>
-    <div class="item"><strong>Wi-Fi — IEEE 802.11</strong><div class="nb">Padrões: b(11Mbps) · g(54Mbps) · n(300Mbps) · ac(Gbps) · ax(Wi-Fi 6). Segurança: WEP (fraco) → WPA → WPA2 (atual).</div></div>
-  </div>
-</div>
-
-<div id="essencial" class="section">
-  <div class="card">
-    <h3>O que cai com certeza</h3>
-    <div class="item"><span class="badge b-red">1</span> <strong>Camadas OSI em ordem</strong> — nome, função, PDU (bit/frame/pacote/segmento/dado)<div class="nb">Macete: "Por Favor Do Not Throw Sausage Pizza" (Física→Aplicação)</div></div>
-    <div class="item"><span class="badge b-red">2</span> <strong>Diferença OSI vs TCP/IP</strong> — OSI=7 camadas (modelo referência), TCP/IP=4 camadas (modelo real)</div>
-    <div class="item"><span class="badge b-red">3</span> <strong>Encapsulamento</strong> — dados descem adicionando cabeçalho em cada camada, sobem removendo</div>
-    <div class="item"><span class="badge b-red">4</span> <strong>MAC vs IP</strong> — MAC=físico/permanente/camada 2, IP=lógico/pode mudar/camada 3</div>
-    <div class="item"><span class="badge b-warn">5</span> <strong>CSMA/CD</strong> — Carrier Sense Multiple Access with Collision Detection. Usado no Ethernet cabeado.</div>
-    <div class="item"><span class="badge b-warn">6</span> <strong>Topologia estrela</strong> — switch no centro, mais usada hoje. Falha de 1 cabo não derruba a rede.</div>
-    <div class="item"><span class="badge b-warn">7</span> <strong>Fibra óptica</strong> — maior velocidade, maior distância, imune a interferência eletromagnética</div>
-    <div class="item"><span class="badge b-blue">8</span> <strong>WPA2</strong> — padrão de segurança Wi-Fi atual. WEP = obsoleto/inseguro.</div>
-  </div>
-
-  <div class="card">
-    <h3>Tabela OSI — Decorar isso</h3>
-    <div style="overflow-x: auto;">
-      <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
-        <tr style="background: var(--color-background-secondary);">
-          <th style="padding: 6px 8px; text-align: left; font-weight: 500;">#</th>
-          <th style="padding: 6px 8px; text-align: left; font-weight: 500;">Camada</th>
-          <th style="padding: 6px 8px; text-align: left; font-weight: 500;">PDU</th>
-          <th style="padding: 6px 8px; text-align: left; font-weight: 500;">Dispositivo</th>
-        </tr>
-        <tr><td style="padding:5px 8px;">7</td><td>Aplicação</td><td>Dado</td><td>—</td></tr>
-        <tr style="background: var(--color-background-secondary);"><td style="padding:5px 8px;">6</td><td>Apresentação</td><td>Dado</td><td>—</td></tr>
-        <tr><td style="padding:5px 8px;">5</td><td>Sessão</td><td>Dado</td><td>—</td></tr>
-        <tr style="background: var(--color-background-secondary);"><td style="padding:5px 8px;">4</td><td>Transporte</td><td>Segmento</td><td>—</td></tr>
-        <tr><td style="padding:5px 8px;">3</td><td>Rede</td><td>Pacote</td><td>Roteador</td></tr>
-        <tr style="background: var(--color-background-secondary);"><td style="padding:5px 8px;">2</td><td>Enlace</td><td>Frame/Quadro</td><td>Switch</td></tr>
-        <tr><td style="padding:5px 8px;">1</td><td>Física</td><td>Bit</td><td>Hub/Cabo</td></tr>
-      </table>
+<!-- LANGUAGE SELECT -->
+<section id="language-select">
+  <div class="section-label">Escolha sua linguagem</div>
+  <div class="lang-cards">
+    <div class="lang-card python" onclick="startGame('python')">
+      <div class="lang-icon">🐍</div>
+      <div class="lang-name">Python</div>
+      <p class="lang-desc">Sintaxe limpa e poderosa. A linguagem favorita para quem está começando — e para quem já sabe muito.</p>
+      <div class="lang-levels">
+        <span class="level-badge">Iniciante</span>
+        <span class="level-badge">Intermediário</span>
+        <span class="level-badge">8 desafios</span>
+      </div>
+      <div class="lang-arrow">↗</div>
+    </div>
+    <div class="lang-card java" onclick="startGame('java')">
+      <div class="lang-icon">☕</div>
+      <div class="lang-name">Java</div>
+      <p class="lang-desc">Estruturada e robusta. Aprenda os fundamentos de OOP, tipos e estrutura de código com desafios progressivos.</p>
+      <div class="lang-levels">
+        <span class="level-badge">Iniciante</span>
+        <span class="level-badge">Intermediário</span>
+        <span class="level-badge">8 desafios</span>
+      </div>
+      <div class="lang-arrow">↗</div>
     </div>
   </div>
-</div>
+</section>
 
-<div id="exercicios" class="section">
-  <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">Responda mentalmente, depois clique em "Ver resposta".</p>
-
-  <div class="q">
-    <div class="qt">1. Qual camada OSI é responsável pelo endereçamento lógico (IP) e roteamento?</div>
-    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
-    <div class="ans">Camada 3 — Rede. Dispositivo: Roteador. PDU: Pacote.</div>
+<!-- GAME AREA -->
+<section id="game-area">
+  <div class="game-header">
+    <div>
+      <div class="game-lang-badge" id="gameLangBadge">Python</div>
+      <h2 class="game-title" id="gameTitle">Nível Iniciante</h2>
+    </div>
+    <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+      <div class="score-display">Pontos: <span id="scoreDisplay">0</span></div>
+      <button class="back-lang-btn" onclick="backToLanguages()">← Linguagens</button>
+    </div>
   </div>
 
-  <div class="q">
-    <div class="qt">2. Qual a diferença entre Hub e Switch?</div>
-    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
-    <div class="ans">Hub repassa dados para todas as portas (broadcast físico, causa colisões). Switch aprende endereços MAC e envia só para a porta correta — mais eficiente.</div>
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span id="progressText">Desafio 1 de 8</span>
+      <span id="levelLabel">INICIANTE</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
   </div>
 
-  <div class="q">
-    <div class="qt">3. Um técnico precisa ligar 4 computadores numa rede local simples. Qual topologia é mais indicada e por quê?</div>
-    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
-    <div class="ans">Estrela. Fácil de gerenciar, falha de 1 cabo não derruba os outros, e switch centraliza o tráfego com eficiência.</div>
+  <div class="level-tabs">
+    <button class="level-tab active" onclick="setLevel('beginner')">🟢 Iniciante</button>
+    <button class="level-tab" onclick="setLevel('intermediate')">🟡 Intermediário</button>
   </div>
 
-  <div class="q">
-    <div class="qt">4. O que o protocolo ARP faz, em uma frase?</div>
-    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
-    <div class="ans">ARP resolve um endereço IP em endereço MAC — pergunta "quem tem o IP X?" e recebe de volta o MAC do dono.</div>
-  </div>
+  <div id="challengeContainer"></div>
+</section>
 
-  <div class="q">
-    <div class="qt">5. Associe: IEEE 802.3 / IEEE 802.11 → Ethernet cabeada / Wi-Fi</div>
-    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
-    <div class="ans">IEEE 802.3 = Ethernet (cabeada). IEEE 802.11 = Wi-Fi (sem fio).</div>
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-label">Como funciona</div>
+  <div class="how-grid">
+    <div class="how-item fade-in">
+      <div class="how-num">01</div>
+      <div class="how-title">Escolha a linguagem</div>
+      <p class="how-desc">Python ou Java — comece pelo que faz sentido pra você ou pelo que o seu curso exige.</p>
+    </div>
+    <div class="how-item fade-in">
+      <div class="how-num">02</div>
+      <div class="how-title">Resolva os desafios</div>
+      <p class="how-desc">Complete código, corrija erros, preveja saídas e responda desafios de lógica.</p>
+    </div>
+    <div class="how-item fade-in">
+      <div class="how-num">03</div>
+      <div class="how-title">Feedback imediato</div>
+      <p class="how-desc">Cada resposta gera uma explicação. Certo ou errado, você vai entender o porquê.</p>
+    </div>
+    <div class="how-item fade-in">
+      <div class="how-num">04</div>
+      <div class="how-title">Suba de nível</div>
+      <p class="how-desc">Iniciante → Intermediário. A dificuldade cresce com você de forma progressiva.</p>
+    </div>
   </div>
+</section>
 
-  <div class="q">
-    <div class="qt">6. Quantas e quais são as camadas do modelo TCP/IP?</div>
-    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
-    <div class="ans">4 camadas: (1) Acesso à Rede, (2) Internet, (3) Transporte, (4) Aplicação.</div>
-  </div>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">CODEQUEST</div>
+  <p class="footer-text">Aprenda programação — na prática, com jogos.</p>
+</footer>
 
-  <div class="q">
-    <div class="qt">7. Por que a fibra óptica é preferida em longas distâncias?</div>
-    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
-    <div class="ans">Usa luz (não elétricidade), logo: altíssima velocidade, grandes distâncias sem perda de sinal, imune a interferência eletromagnética.</div>
-  </div>
-
-  <div class="q">
-    <div class="qt">8. O que é CSMA/CD e em qual tecnologia é usado?</div>
-    <span class="show-ans" onclick="toggle(this)">Ver resposta</span>
-    <div class="ans">Carrier Sense Multiple Access with Collision Detection — mecanismo do Ethernet cabeado que "escuta" o meio antes de transmitir e detecta colisões. Usado no IEEE 802.3.</div>
-  </div>
-</div>
-
-<div id="revisao" class="section">
-  <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">Estratégia blocos de estudo — 24h antes da prova.</p>
-  <div class="card timeline">
-    <div class="tl-item"><div class="time">Hora 1–2</div><div class="desc"><strong>OSI e TCP/IP</strong> — Desenhe as camadas à mão. Anote PDU e dispositivo de cada camada OSI. Compare com TCP/IP.</div></div>
-    <div class="tl-item"><div class="time">Hora 3–4</div><div class="desc"><strong>MAC, ARP e Ethernet</strong> — Entenda o fluxo: IP conhecido → ARP → MAC obtido → frame Ethernet enviado. CSMA/CD: escreva com suas palavras.</div></div>
-    <div class="tl-item"><div class="time">Hora 5–6</div><div class="desc"><strong>Topologias e Meios</strong> — Desenhe cada topologia. Monte tabela: Par trançado / Coaxial / Fibra → velocidade, distância, uso.</div></div>
-    <div class="tl-item"><div class="time">Hora 7</div><div class="desc"><strong>Wi-Fi e classificação LAN/MAN/WAN</strong> — Padrões 802.11 (b/g/n/ac/ax), segurança WEP→WPA2. Exemplos reais de PAN/LAN/MAN/WAN.</div></div>
-    <div class="tl-item"><div class="time">Hora 8</div><div class="desc"><strong>Quiz total</strong> — Faça todos os 8 exercícios desta aba sem ver as respostas. Errou? Relê só aquele ponto. Dorme com isso fresco.</div></div>
-  </div>
-
-  <div class="card">
-    <h3>Macetes rápidos</h3>
-    <div class="item"><strong>Camadas OSI (7→1):</strong> "Por Favor Do Not Throw Sausage Pizza" — Aplicação, Apresentação, Sessão, Transporte, Rede, Enlace, Física</div>
-    <div class="item"><strong>MAC = placa; IP = endereço da casa.</strong> A placa não muda, o endereço pode mudar.</div>
-    <div class="item"><strong>Switch = inteligente (MAC table); Hub = burro (manda pra todos).</strong></div>
-    <div class="item"><strong>Fibra = luz = rápido = longe = caro.</strong> UTP = elétrico = barato = curto.</div>
-    <div class="item"><strong>WEP morreu. WPA2 vive.</strong></div>
-  </div>
+<!-- CELEBRATION -->
+<div id="celebration">
+  <canvas class="particles" id="particleCanvas"></canvas>
+  <div class="cel-emoji">🏆</div>
+  <h2 class="cel-title">Fase<br><span class="acc">Completa!</span></h2>
+  <p class="cel-sub" id="celSub">Você acertou todos os desafios dessa fase.</p>
+  <button class="run-btn" onclick="closeCelebration()" style="margin-top:1rem;">Continuar →</button>
 </div>
 
 <script>
-function show(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
+// ─── CURSOR ───────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX - 5 + 'px';
+  cursor.style.top = e.clientY - 5 + 'px';
+});
+document.addEventListener('mousedown', () => cursor.classList.add('big'));
+document.addEventListener('mouseup', () => cursor.classList.remove('big'));
+
+// ─── TYPING DEMO ──────────────────────────────────────
+const phrases = [
+  'print("Olá, Mundo!")',
+  'for i in range(10): ...',
+  'def calcular(a, b): return a + b',
+  'System.out.println("Java!");',
+  'if (x > 0) { System.out.println(x); }',
+  'int soma = 0; for(int i=0;i<n;i++) soma+=i;'
+];
+let phraseIdx = 0, charIdx = 0, deleting = false;
+const typingEl = document.getElementById('typingDemo');
+function typeLoop() {
+  const phrase = phrases[phraseIdx];
+  if (!deleting) {
+    typingEl.textContent = phrase.slice(0, charIdx++);
+    if (charIdx > phrase.length) { deleting = true; setTimeout(typeLoop, 1500); return; }
+  } else {
+    typingEl.textContent = phrase.slice(0, charIdx--);
+    if (charIdx < 0) { deleting = false; phraseIdx = (phraseIdx+1) % phrases.length; }
+  }
+  setTimeout(typeLoop, deleting ? 40 : 70);
 }
-function toggle(el) {
-  const ans = el.nextElementSibling;
-  if (ans.style.display === 'block') { ans.style.display = 'none'; el.textContent = 'Ver resposta'; }
-  else { ans.style.display = 'block'; el.textContent = 'Ocultar'; }
+typeLoop();
+
+// ─── FADE IN ON SCROLL ────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: .15 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ─── CHALLENGES DATA ──────────────────────────────────
+const challenges = {
+  python: {
+    beginner: [
+      {
+        type: 'predict',
+        question: 'O que esse código vai imprimir?',
+        context: 'Analise o código abaixo e escolha a saída correta.',
+        code: `<span class="fn">print</span>(<span class="str">"Olá"</span>)\n<span class="fn">print</span>(<span class="str">"Mundo"</span>)\n<span class="fn">print</span>(<span class="num">1</span> + <span class="num">2</span>)`,
+        options: ['Olá\nMundo\n12', 'Olá\nMundo\n3', 'OláMundo3', 'Erro'],
+        correct: 1,
+        feedback: {
+          success: '✓ Correto! O <code>print()</code> exibe cada valor em uma linha separada. <code>1 + 2</code> resulta em <code>3</code>, não <code>"12"</code>.',
+          error: 'Quase! O <code>print()</code> sempre quebra a linha após imprimir. E <code>1 + 2</code> é uma soma numérica — resultado: <code>3</code>.'
+        }
+      },
+      {
+        type: 'fill',
+        question: 'Complete o código para criar uma variável chamada "nome" com o valor "Ana":',
+        context: 'Em Python, variáveis são criadas simplesmente atribuindo um valor. Não precisa de tipo declarado.',
+        code: `<span class="blank"><input class="fill-input" id="fill_0_0" placeholder="..."></span> = <span class="str">"Ana"</span>\n<span class="fn">print</span>(nome)`,
+        blanks: [{ id: 'fill_0_0', answer: 'nome' }],
+        feedback: {
+          success: '✓ Perfeito! Em Python não precisamos declarar o tipo — só escrever <code>nome = "Ana"</code> já cria a variável.',
+          error: 'O nome da variável deve ser exatamente <code>nome</code>. Em Python, variáveis são criadas com a sintaxe: <code>nome_da_variável = valor</code>.'
+        }
+      },
+      {
+        type: 'fix',
+        question: 'Esse código tem um erro. Qual é a versão correta?',
+        context: 'Identifique o bug e escolha a opção corrigida.',
+        code: `<span class="kw">if</span> x = <span class="num">10</span>:\n    <span class="fn">print</span>(<span class="str">"dez"</span>)`,
+        options: [
+          'if x == 10:\n    print("dez")',
+          'if x = 10\n    print("dez")',
+          'if (x = 10):\n    print("dez")',
+          'if x === 10:\n    print("dez")'
+        ],
+        correct: 0,
+        feedback: {
+          success: '✓ Exato! Em Python (e na maioria das linguagens), <code>==</code> compara valores. O <code>=</code> é só para atribuição.',
+          error: 'O erro está no uso de <code>=</code> em uma condição. Para comparar, use <code>==</code>. O <code>=</code> é só para atribuir valores.'
+        }
+      },
+      {
+        type: 'predict',
+        question: 'Qual o valor de "resultado" ao final?',
+        context: 'Acompanhe a execução linha por linha.',
+        code: `x = <span class="num">5</span>\ny = <span class="num">3</span>\nresultado = x * y + <span class="num">2</span>\n<span class="fn">print</span>(resultado)`,
+        options: ['17', '40', '15', '10'],
+        correct: 0,
+        feedback: {
+          success: '✓ Correto! Python segue a ordem matemática: primeiro a multiplicação <code>5 * 3 = 15</code>, depois soma <code>15 + 2 = 17</code>.',
+          error: 'Lembre da ordem das operações: primeiro multiplica <code>5 * 3 = 15</code>, depois soma o 2. Resultado: <code>17</code>.'
+        }
+      }
+    ],
+    intermediate: [
+      {
+        type: 'fill',
+        question: 'Complete o loop para imprimir os números de 1 a 5:',
+        context: 'O <code>range()</code> em Python gera uma sequência de números. <code>range(1, 6)</code> gera 1, 2, 3, 4, 5.',
+        code: `<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="blank"><input class="fill-input" id="fill_1_0" placeholder="..."></span>, <span class="blank"><input class="fill-input" id="fill_1_1" placeholder="..."></span>):\n    <span class="fn">print</span>(i)`,
+        blanks: [
+          { id: 'fill_1_0', answer: '1' },
+          { id: 'fill_1_1', answer: '6' }
+        ],
+        feedback: {
+          success: '✓ Perfeito! <code>range(1, 6)</code> gera 1,2,3,4,5. O segundo parâmetro é exclusivo — por isso usamos 6 para incluir o 5.',
+          error: 'Use <code>range(1, 6)</code>. O primeiro número é onde começa (inclusivo), o segundo é onde para (exclusivo). Para incluir 5, o limite deve ser 6.'
+        }
+      },
+      {
+        type: 'predict',
+        question: 'O que essa função retorna quando chamada com calcular(4, 3)?',
+        context: 'Analise a lógica da função e calcule o resultado.',
+        code: `<span class="kw">def</span> <span class="fn">calcular</span>(a, b):\n    <span class="kw">if</span> a > b:\n        <span class="kw">return</span> a - b\n    <span class="kw">else</span>:\n        <span class="kw">return</span> a + b\n\n<span class="fn">print</span>(<span class="fn">calcular</span>(<span class="num">4</span>, <span class="num">3</span>))`,
+        options: ['1', '7', '12', 'None'],
+        correct: 0,
+        feedback: {
+          success: '✓ Ótimo! Como <code>4 > 3</code> é verdadeiro, a função retorna <code>a - b = 4 - 3 = 1</code>.',
+          error: 'Siga o fluxo: <code>a = 4</code>, <code>b = 3</code>. Como <code>4 > 3</code> é <code>True</code>, executa o primeiro bloco: <code>return 4 - 3 = 1</code>.'
+        }
+      },
+      {
+        type: 'fix',
+        question: 'A função abaixo deveria retornar a lista apenas com números pares. O que está errado?',
+        context: 'Corrija a condição do filtro.',
+        code: `<span class="kw">def</span> <span class="fn">pares</span>(lista):\n    resultado = []\n    <span class="kw">for</span> n <span class="kw">in</span> lista:\n        <span class="kw">if</span> n % <span class="num">2</span> == <span class="num">1</span>:  <span class="cm"># erro aqui</span>\n            resultado.<span class="fn">append</span>(n)\n    <span class="kw">return</span> resultado`,
+        options: [
+          'Trocar == 1 por == 0',
+          'Trocar % por //',
+          'Trocar for por while',
+          'Trocar append por add'
+        ],
+        correct: 0,
+        feedback: {
+          success: '✓ Correto! Números pares têm resto 0 na divisão por 2. A condição correta é <code>n % 2 == 0</code>, não <code>== 1</code> (que filtra ímpares).',
+          error: 'O operador <code>%</code> retorna o resto da divisão. Números pares têm resto <code>0</code> quando divididos por 2. Então a condição deve ser <code>n % 2 == 0</code>.'
+        }
+      },
+      {
+        type: 'fill',
+        question: 'Complete a função que calcula a média de uma lista:',
+        context: 'Use <code>sum()</code> para somar e <code>len()</code> para contar os elementos.',
+        code: `<span class="kw">def</span> <span class="fn">media</span>(numeros):\n    total = <span class="fn">sum</span>(<span class="blank"><input class="fill-input" id="fill_2_0" placeholder="..."></span>)\n    quantidade = <span class="fn">len</span>(numeros)\n    <span class="kw">return</span> <span class="blank"><input class="fill-input" id="fill_2_1" placeholder="..."></span> / quantidade`,
+        blanks: [
+          { id: 'fill_2_0', answer: 'numeros' },
+          { id: 'fill_2_1', answer: 'total' }
+        ],
+        feedback: {
+          success: '✓ Excelente! <code>sum(numeros)</code> soma todos os valores, <code>len(numeros)</code> conta quantos são, e <code>total / quantidade</code> calcula a média.',
+          error: 'Precisamos de: <code>sum(numeros)</code> para somar a lista toda, e <code>total / quantidade</code> para calcular a média.'
+        }
+      }
+    ]
+  },
+  java: {
+    beginner: [
+      {
+        type: 'predict',
+        question: 'O que esse código Java vai imprimir?',
+        context: 'Analise o código e identifique a saída.',
+        code: `<span class="kw">public class</span> <span class="fn">Main</span> {\n  <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {\n    System.out.<span class="fn">println</span>(<span class="str">"Java"</span>);\n    System.out.<span class="fn">println</span>(<span class="num">2</span> + <span class="num">3</span>);\n    System.out.<span class="fn">println</span>(<span class="str">"2"</span> + <span class="str">"3"</span>);\n  }\n}`,
+        options: ['Java\n5\n23', 'Java\n5\n5', 'Java\n23\n23', 'Erro de compilação'],
+        correct: 0,
+        feedback: {
+          success: '✓ Correto! <code>2 + 3</code> soma inteiros → <code>5</code>. Mas <code>"2" + "3"</code> concatena Strings → <code>"23"</code>. Em Java, o <code>+</code> se comporta diferente com tipos diferentes.',
+          error: 'Cuidado com os tipos! <code>2 + 3</code> é soma de inteiros (5). Mas <code>"2" + "3"</code> é concatenação de String ("23"). Em Java, o operador <code>+</code> depende do tipo.'
+        }
+      },
+      {
+        type: 'fill',
+        question: 'Complete a declaração das variáveis em Java:',
+        context: 'Java é uma linguagem tipada — você precisa declarar o tipo de cada variável.',
+        code: `<span class="blank"><input class="fill-input" id="fill_j0_0" placeholder="tipo..."></span> idade = <span class="num">18</span>;\n<span class="blank"><input class="fill-input" id="fill_j0_1" placeholder="tipo..."></span> nome = <span class="str">"Carlos"</span>;\nSystem.out.<span class="fn">println</span>(nome + <span class="str">" tem "</span> + idade);`,
+        blanks: [
+          { id: 'fill_j0_0', answer: 'int' },
+          { id: 'fill_j0_1', answer: 'String' }
+        ],
+        feedback: {
+          success: '✓ Perfeito! Em Java: <code>int</code> para números inteiros e <code>String</code> para textos (com S maiúsculo).',
+          error: 'Em Java: use <code>int</code> para o número 18, e <code>String</code> (com S maiúsculo!) para o texto "Carlos".'
+        }
+      },
+      {
+        type: 'fix',
+        question: 'Esse código Java tem um erro de compilação. Qual opção está correta?',
+        context: 'Identifique o problema na sintaxe.',
+        code: `<span class="kw">int</span> x = <span class="num">10</span>\n<span class="kw">int</span> y = <span class="num">5</span>\nSystem.out.<span class="fn">println</span>(x + y)`,
+        options: [
+          'int x = 10;\nint y = 5;\nSystem.out.println(x + y);',
+          'int x = 10,\nint y = 5,\nSystem.out.println(x + y)',
+          'var x = 10\nvar y = 5\nprint(x + y)',
+          'integer x = 10;\ninteger y = 5;\nSystem.out.println(x+y);'
+        ],
+        correct: 0,
+        feedback: {
+          success: '✓ Isso! Em Java, toda instrução termina com <code>;</code> (ponto e vírgula). Esquecer o ponto e vírgula é um dos erros mais comuns.',
+          error: 'Em Java, cada instrução deve terminar com <code>;</code>. A versão correta adiciona ponto e vírgula no final de cada linha de código.'
+        }
+      },
+      {
+        type: 'predict',
+        question: 'Qual o valor impresso pelo seguinte código?',
+        context: 'Acompanhe o valor da variável a cada passo.',
+        code: `<span class="kw">int</span> n = <span class="num">10</span>;\nn = n + <span class="num">5</span>;\nn = n * <span class="num">2</span>;\nSystem.out.<span class="fn">println</span>(n);`,
+        options: ['30', '25', '20', '15'],
+        correct: 0,
+        feedback: {
+          success: '✓ Correto! Passo a passo: <code>n = 10</code> → <code>n = 10 + 5 = 15</code> → <code>n = 15 * 2 = 30</code>.',
+          error: 'Siga passo a passo: começa em 10, soma 5 (fica 15), multiplica por 2 (fica 30). Resultado: 30.'
+        }
+      }
+    ],
+    intermediate: [
+      {
+        type: 'fill',
+        question: 'Complete o loop for para somar os números de 1 a 10:',
+        context: 'O for em Java tem três partes: inicialização, condição e incremento.',
+        code: `<span class="kw">int</span> soma = <span class="num">0</span>;\n<span class="kw">for</span> (<span class="kw">int</span> i = <span class="blank"><input class="fill-input" id="fill_ji0_0" placeholder="..."></span>; i <= <span class="blank"><input class="fill-input" id="fill_ji0_1" placeholder="..."></span>; i++) {\n    soma += i;\n}\nSystem.out.<span class="fn">println</span>(soma);`,
+        blanks: [
+          { id: 'fill_ji0_0', answer: '1' },
+          { id: 'fill_ji0_1', answer: '10' }
+        ],
+        feedback: {
+          success: '✓ Exato! <code>i = 1</code> começa do 1, <code>i <= 10</code> vai até o 10 (inclusivo). A soma de 1 a 10 é 55.',
+          error: 'O loop precisa começar em <code>1</code> e a condição deve ser <code>i <= 10</code> para incluir o 10.'
+        }
+      },
+      {
+        type: 'predict',
+        question: 'O que o método retorna quando chamado com verificar(7)?',
+        context: 'Leia o método com atenção e trace a execução.',
+        code: `<span class="kw">static</span> String <span class="fn">verificar</span>(<span class="kw">int</span> n) {\n    <span class="kw">if</span> (n % <span class="num">2</span> == <span class="num">0</span>) {\n        <span class="kw">return</span> <span class="str">"par"</span>;\n    } <span class="kw">else</span> {\n        <span class="kw">return</span> <span class="str">"ímpar"</span>;\n    }\n}\nSystem.out.<span class="fn">println</span>(<span class="fn">verificar</span>(<span class="num">7</span>));`,
+        options: ['"ímpar"', '"par"', '0', '1'],
+        correct: 0,
+        feedback: {
+          success: '✓ Correto! <code>7 % 2 = 1</code>, não é 0, então a condição <code>n % 2 == 0</code> é falsa. O método retorna <code>"ímpar"</code>.',
+          error: '<code>7 % 2 = 1</code> (resto 1), então <code>n % 2 == 0</code> é <code>false</code>. O método cai no <code>else</code> e retorna <code>"ímpar"</code>.'
+        }
+      },
+      {
+        type: 'fix',
+        question: 'O código deveria criar um array e imprimir o terceiro elemento. O que está errado?',
+        context: 'Arrays em Java têm índices que começam em 0.',
+        code: `<span class="kw">int</span>[] numeros = {<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>};\nSystem.out.<span class="fn">println</span>(numeros[<span class="num">3</span>]); <span class="cm">// queremos 30</span>`,
+        options: [
+          'numeros[2] → índices começam em 0',
+          'numeros[3] está certo',
+          'numeros(3) → usar parênteses',
+          'numeros.get(3) → usar método'
+        ],
+        correct: 0,
+        feedback: {
+          success: '✓ Exato! Arrays começam no índice 0. Então: índice 0→10, 1→20, 2→30, 3→40. Para o terceiro elemento (30), use índice <code>2</code>.',
+          error: 'Em Java (e na maioria das linguagens), arrays começam no índice <code>0</code>. Elemento 1→índice 0, elemento 2→índice 1, elemento 3→índice 2.'
+        }
+      },
+      {
+        type: 'fill',
+        question: 'Complete a classe com um construtor básico:',
+        context: 'O construtor em Java tem o mesmo nome da classe e não tem tipo de retorno.',
+        code: `<span class="kw">public class</span> <span class="fn">Pessoa</span> {\n    String nome;\n    <span class="kw">int</span> idade;\n\n    <span class="kw">public</span> <span class="blank"><input class="fill-input" id="fill_ji2_0" placeholder="..."></span>(String n, <span class="kw">int</span> i) {\n        <span class="blank"><input class="fill-input" id="fill_ji2_1" placeholder="..."></span>.nome = n;\n        this.idade = i;\n    }\n}`,
+        blanks: [
+          { id: 'fill_ji2_0', answer: 'Pessoa' },
+          { id: 'fill_ji2_1', answer: 'this' }
+        ],
+        feedback: {
+          success: '✓ Perfeito! O construtor tem o mesmo nome da classe (<code>Pessoa</code>). O <code>this</code> referencia o objeto atual, diferenciando o atributo da classe do parâmetro.',
+          error: 'O construtor deve ter o mesmo nome da classe: <code>Pessoa</code>. E use <code>this.nome</code> para referenciar o atributo do objeto, não o parâmetro.'
+        }
+      }
+    ]
+  }
+};
+
+// ─── STATE ────────────────────────────────────────────
+let state = {
+  lang: 'python',
+  level: 'beginner',
+  currentChallenge: 0,
+  score: 0,
+  answered: false,
+  totalBeginnerScore: 0
+};
+
+// ─── GAME FLOW ────────────────────────────────────────
+function startGame(lang) {
+  state.lang = lang;
+  state.level = 'beginner';
+  state.currentChallenge = 0;
+  state.score = 0;
+  state.answered = false;
+
+  document.getElementById('gameLangBadge').textContent = lang === 'python' ? '🐍 Python' : '☕ Java';
+  document.getElementById('gameLangBadge').className = 'game-lang-badge ' + lang;
+  document.getElementById('scoreDisplay').textContent = '0';
+
+  document.querySelectorAll('.level-tab').forEach((t,i) => {
+    t.classList.toggle('active', i === 0);
+  });
+
+  document.getElementById('language-select').style.display = 'none';
+  document.getElementById('game-area').classList.add('active');
+  renderChallenge();
+
+  document.getElementById('game-area').scrollIntoView({ behavior: 'smooth' });
+}
+
+function backToLanguages() {
+  document.getElementById('game-area').classList.remove('active');
+  document.getElementById('language-select').style.display = '';
+  document.getElementById('language-select').scrollIntoView({ behavior: 'smooth' });
+}
+
+function setLevel(level) {
+  state.level = level;
+  state.currentChallenge = 0;
+  state.answered = false;
+  document.querySelectorAll('.level-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && level==='beginner') || (i===1 && level==='intermediate'));
+  });
+  renderChallenge();
+}
+
+function getChallengeset() {
+  return challenges[state.lang][state.level];
+}
+
+function renderChallenge() {
+  const set = getChallengeset();
+  const total = set.length;
+  const idx = state.currentChallenge;
+
+  document.getElementById('progressText').textContent = `Desafio ${idx+1} de ${total}`;
+  document.getElementById('levelLabel').textContent = state.level === 'beginner' ? 'INICIANTE' : 'INTERMEDIÁRIO';
+  document.getElementById('progressFill').style.width = ((idx)/total*100) + '%';
+  document.getElementById('gameTitle').textContent = state.level === 'beginner' ? 'Nível Iniciante' : 'Nível Intermediário';
+
+  const ch = set[idx];
+  const container = document.getElementById('challengeContainer');
+  container.innerHTML = '';
+  state.answered = false;
+
+  const card = document.createElement('div');
+  card.className = 'challenge-card active';
+
+  const typeLabels = {
+    predict: 'Prever saída',
+    fill: 'Completar código',
+    fix: 'Corrigir erro',
+    logic: 'Lógica'
+  };
+
+  let bodyHTML = `
+    <div class="challenge-header">
+      <div class="challenge-type"><div class="type-dot"></div>${typeLabels[ch.type] || ch.type}</div>
+      <div class="challenge-num">#${String(idx+1).padStart(2,'0')}</div>
+    </div>
+    <div class="challenge-body">
+      <div class="challenge-question">${ch.question}</div>
+      <div class="challenge-context">${ch.context}</div>
+      <div class="code-block">${ch.code}</div>`;
+
+  if (ch.type === 'predict' || ch.type === 'fix') {
+    bodyHTML += `<div class="choices" id="choices">`;
+    ch.options.forEach((opt, i) => {
+      bodyHTML += `<button class="choice-btn" onclick="selectChoice(${i})">${opt.replace(/\n/g,'<br>')}</button>`;
+    });
+    bodyHTML += `</div>`;
+  }
+
+  if (ch.type === 'fill') {
+    bodyHTML += `<div class="challenge-actions">
+      <button class="run-btn" onclick="checkFill()">▶ Verificar</button>
+    </div>`;
+  } else {
+    bodyHTML += `<div class="challenge-actions" id="actionBar">
+      <button class="next-btn" id="nextBtn" onclick="nextChallenge()">Próximo →</button>
+    </div>`;
+  }
+
+  bodyHTML += `<div class="feedback-box" id="feedbackBox">
+    <div class="feedback-status" id="feedbackStatus"></div>
+    <div class="feedback-text" id="feedbackText"></div>
+  </div>`;
+
+  bodyHTML += `</div>`;
+  card.innerHTML = bodyHTML;
+  container.appendChild(card);
+}
+
+function selectChoice(idx) {
+  if (state.answered) return;
+  state.answered = true;
+  const ch = getChallengeset()[state.currentChallenge];
+  const btns = document.querySelectorAll('.choice-btn');
+  const isCorrect = idx === ch.correct;
+
+  btns[idx].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) btns[ch.correct].classList.add('correct');
+
+  if (isCorrect) state.score += 10;
+  document.getElementById('scoreDisplay').textContent = state.score;
+
+  showFeedback(isCorrect, ch.feedback);
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function checkFill() {
+  if (state.answered) return;
+  state.answered = true;
+  const ch = getChallengeset()[state.currentChallenge];
+  let allCorrect = true;
+
+  ch.blanks.forEach(b => {
+    const inp = document.getElementById(b.id);
+    if (!inp) return;
+    const val = inp.value.trim();
+    const ok = val.toLowerCase() === b.answer.toLowerCase();
+    if (!ok) allCorrect = false;
+    inp.style.borderColor = ok ? 'var(--success)' : 'var(--error)';
+    inp.style.color = ok ? 'var(--success)' : 'var(--error)';
+  });
+
+  if (allCorrect) state.score += 10;
+  document.getElementById('scoreDisplay').textContent = state.score;
+
+  showFeedback(allCorrect, ch.feedback);
+
+  const actionBar = document.querySelector('.challenge-actions');
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'next-btn show';
+  nextBtn.textContent = 'Próximo →';
+  nextBtn.onclick = nextChallenge;
+  actionBar.appendChild(nextBtn);
+}
+
+function showFeedback(success, feedback) {
+  const box = document.getElementById('feedbackBox');
+  const status = document.getElementById('feedbackStatus');
+  const text = document.getElementById('feedbackText');
+
+  box.className = 'feedback-box show ' + (success ? 'success' : 'error');
+  status.textContent = success ? '✓ Correto!' : '✗ Não foi dessa vez...';
+  text.innerHTML = success ? feedback.success : feedback.error;
+}
+
+function nextChallenge() {
+  const set = getChallengeset();
+  state.currentChallenge++;
+
+  if (state.currentChallenge >= set.length) {
+    // Level complete
+    document.getElementById('progressFill').style.width = '100%';
+    showCelebration();
+    return;
+  }
+  renderChallenge();
+}
+
+// ─── CELEBRATION ──────────────────────────────────────
+function showCelebration() {
+  const cel = document.getElementById('celebration');
+  cel.classList.add('show');
+  const isLast = state.level === 'intermediate';
+  document.getElementById('celSub').textContent = isLast
+    ? `Você completou TODOS os desafios de ${state.lang === 'python' ? 'Python' : 'Java'}! Pontuação: ${state.score}`
+    : `Fase concluída! Pontuação: ${state.score}. Avance para o nível intermediário!`;
+  startParticles();
+}
+
+function closeCelebration() {
+  document.getElementById('celebration').classList.remove('show');
+  stopParticles();
+  if (state.level === 'beginner') {
+    setLevel('intermediate');
+    document.querySelectorAll('.level-tab')[1].classList.add('active');
+    document.querySelectorAll('.level-tab')[0].classList.remove('active');
+  } else {
+    backToLanguages();
+  }
+}
+
+// ─── PARTICLES ────────────────────────────────────────
+let particleRAF;
+function startParticles() {
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const colors = ['#e8ff3c','#ff5c35','#3cffe0','#a8ff3c','#fff'];
+  const particles = Array.from({length:80}, () => ({
+    x: Math.random() * canvas.width,
+    y: -20,
+    r: Math.random() * 6 + 2,
+    c: colors[Math.floor(Math.random()*colors.length)],
+    vy: Math.random() * 3 + 2,
+    vx: (Math.random() - .5) * 2,
+    rot: Math.random() * 360,
+    rotV: (Math.random()-.5)*4
+  }));
+  function frame() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p => {
+      p.y += p.vy; p.x += p.vx; p.rot += p.rotV;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI/180);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r, -p.r, p.r*2, p.r*2);
+      ctx.restore();
+      if(p.y > canvas.height) { p.y = -20; p.x = Math.random()*canvas.width; }
+    });
+    particleRAF = requestAnimationFrame(frame);
+  }
+  frame();
+}
+function stopParticles() {
+  cancelAnimationFrame(particleRAF);
+  const canvas = document.getElementById('particleCanvas');
+  canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
 }
 </script>
+</body>
+</html>
