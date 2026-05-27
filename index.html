@@ -1,1393 +1,705 @@
+```html
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CODEQUEST — Aprenda a Programar</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0a0a0a;
-    --fg: #f0ece0;
-    --accent: #e8ff3c;
-    --accent2: #ff5c35;
-    --accent3: #3cffe0;
-    --muted: #555;
-    --border: #222;
-    --card: #111;
-    --python: #3cffe0;
-    --java: #ff5c35;
-    --success: #a8ff3c;
-    --error: #ff3c5c;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: 'Space Mono', monospace;
-    overflow-x: hidden;
-    cursor: default;
-  }
-
-  /* ── CURSOR PERSONALIZADO ── */
-  body * { cursor: none !important; }
-  #cursor {
-    width: 10px; height: 10px;
-    background: var(--accent);
-    border-radius: 50%;
-    position: fixed;
-    top: 0; left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transition: transform .15s, background .2s;
-    mix-blend-mode: difference;
-  }
-  #cursor.big { transform: scale(5); }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.2rem 2.5rem;
-    border-bottom: 1px solid var(--border);
-    background: rgba(10,10,10,.92);
-    backdrop-filter: blur(10px);
-  }
-  .nav-logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 1.1rem;
-    letter-spacing: -.02em;
-    color: var(--accent);
-  }
-  .nav-links { display: flex; gap: 2rem; }
-  .nav-links a {
-    font-size: .7rem;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color .2s;
-  }
-  .nav-links a:hover { color: var(--fg); }
-
-  /* ── HERO ── */
-  #hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 8rem 2.5rem 4rem;
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid var(--border);
-  }
-  .hero-grid-bg {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 60px 60px;
-    opacity: .3;
-  }
-  .hero-tag {
-    font-size: .65rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: .8rem;
-  }
-  .hero-tag::before {
-    content: '';
-    display: inline-block;
-    width: 2rem;
-    height: 1px;
-    background: var(--muted);
-  }
-  .hero-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(3.5rem, 10vw, 9rem);
-    line-height: .92;
-    letter-spacing: -.04em;
-    margin-bottom: 2rem;
-  }
-  .hero-title .line { display: block; overflow: hidden; }
-  .hero-title .accent { color: var(--accent); }
-  .hero-title .outline {
-    -webkit-text-stroke: 1px var(--fg);
-    color: transparent;
-  }
-  .hero-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 3rem;
-    flex-wrap: wrap;
-    gap: 2rem;
-  }
-  .hero-desc {
-    max-width: 420px;
-    font-size: .85rem;
-    line-height: 1.7;
-    color: var(--muted);
-  }
-  .hero-cta {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-  .btn {
-    font-family: 'Space Mono', monospace;
-    font-size: .75rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: .9rem 2rem;
-    border: 1px solid currentColor;
-    text-decoration: none;
-    transition: all .2s;
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-  }
-  .btn-python { color: var(--python); }
-  .btn-python:hover { background: var(--python); color: var(--bg); }
-  .btn-java { color: var(--java); }
-  .btn-java:hover { background: var(--java); color: var(--bg); }
-  .hero-scroll {
-    position: absolute;
-    bottom: 2rem;
-    right: 2.5rem;
-    font-size: .6rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    writing-mode: vertical-rl;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-  .hero-scroll::after {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 3rem;
-    background: var(--muted);
-    animation: scrollLine 1.5s ease-in-out infinite;
-  }
-  @keyframes scrollLine {
-    0%,100% { opacity: .3; }
-    50% { opacity: 1; }
-  }
-
-  /* TYPING ANIMATION */
-  .typing-demo {
-    font-family: 'Syne Mono', monospace;
-    font-size: clamp(1rem, 2.5vw, 1.4rem);
-    color: var(--accent);
-    min-height: 2em;
-    margin-top: 1rem;
-    position: relative;
-  }
-  .typing-demo::after {
-    content: '|';
-    animation: blink .7s step-end infinite;
-    margin-left: 2px;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
-
-  /* ── LANGUAGE SELECT ── */
-  #language-select {
-    padding: 6rem 2.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-label {
-    font-size: .65rem;
-    letter-spacing: .25em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 3rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-  .lang-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-  }
-  .lang-card {
-    background: var(--bg);
-    padding: 3rem 2.5rem;
-    cursor: pointer;
-    transition: background .25s;
-    position: relative;
-    overflow: hidden;
-  }
-  .lang-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity .3s;
-  }
-  .lang-card.python::before { background: radial-gradient(circle at 30% 50%, rgba(60,255,224,.06) 0%, transparent 70%); }
-  .lang-card.java::before { background: radial-gradient(circle at 30% 50%, rgba(255,92,53,.06) 0%, transparent 70%); }
-  .lang-card:hover::before { opacity: 1; }
-  .lang-card:hover { background: #111; }
-  .lang-icon {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
-  }
-  .lang-name {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    letter-spacing: -.03em;
-    line-height: 1;
-    margin-bottom: 1rem;
-  }
-  .lang-card.python .lang-name { color: var(--python); }
-  .lang-card.java .lang-name { color: var(--java); }
-  .lang-desc { font-size: .8rem; line-height: 1.7; color: var(--muted); max-width: 340px; }
-  .lang-levels {
-    margin-top: 1.5rem;
-    display: flex;
-    gap: .5rem;
-    flex-wrap: wrap;
-  }
-  .level-badge {
-    font-size: .6rem;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    padding: .3rem .7rem;
-    border: 1px solid var(--border);
-    color: var(--muted);
-  }
-  .lang-arrow {
-    position: absolute;
-    bottom: 2rem;
-    right: 2rem;
-    font-size: 1.5rem;
-    transition: transform .3s;
-    color: var(--muted);
-  }
-  .lang-card:hover .lang-arrow { transform: translate(4px, -4px); }
-
-  /* ── GAME AREA ── */
-  #game-area {
-    padding: 0 2.5rem 6rem;
-    display: none;
-  }
-  #game-area.active { display: block; }
-
-  .game-header {
-    padding: 4rem 0 3rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-  .game-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(2rem, 5vw, 4rem);
-    letter-spacing: -.04em;
-    line-height: 1;
-  }
-  .game-lang-badge {
-    font-size: .7rem;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    padding: .4rem 1rem;
-    border: 1px solid currentColor;
-    display: inline-block;
-    margin-bottom: .8rem;
-  }
-  .game-lang-badge.python { color: var(--python); }
-  .game-lang-badge.java { color: var(--java); }
-
-  /* LEVEL TABS */
-  .level-tabs {
-    display: flex;
-    gap: 1px;
-    border: 1px solid var(--border);
-    background: var(--border);
-    margin-bottom: 3rem;
-  }
-  .level-tab {
-    flex: 1;
-    padding: 1rem;
-    text-align: center;
-    font-size: .7rem;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    background: var(--bg);
-    cursor: pointer;
-    transition: all .2s;
-    color: var(--muted);
-    border: none;
-    font-family: 'Space Mono', monospace;
-  }
-  .level-tab.active { background: var(--accent); color: var(--bg); }
-  .level-tab:hover:not(.active) { background: #111; color: var(--fg); }
-
-  /* CHALLENGE CARD */
-  .challenge-card {
-    border: 1px solid var(--border);
-    background: var(--card);
-    margin-bottom: 2rem;
-    display: none;
-  }
-  .challenge-card.active { display: block; }
-  .challenge-header {
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  .challenge-type {
-    font-size: .6rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-  .type-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-  }
-  .challenge-num {
-    font-family: 'Syne Mono', monospace;
-    font-size: .7rem;
-    color: var(--muted);
-  }
-  .challenge-body { padding: 2rem; }
-  .challenge-question {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-    line-height: 1.3;
-    margin-bottom: 1rem;
-  }
-  .challenge-context {
-    font-size: .8rem;
-    color: var(--muted);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-  }
-
-  /* CODE DISPLAY */
-  .code-block {
-    background: #000;
-    border: 1px solid var(--border);
-    padding: 1.5rem;
-    font-family: 'Syne Mono', monospace;
-    font-size: .82rem;
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-    position: relative;
-    overflow-x: auto;
-  }
-  .code-block .kw { color: #c792ea; }
-  .code-block .fn { color: #82aaff; }
-  .code-block .str { color: #c3e88d; }
-  .code-block .num { color: #f78c6c; }
-  .code-block .cm { color: #546e7a; }
-  .code-block .blank {
-    display: inline-block;
-    min-width: 80px;
-    border-bottom: 2px solid var(--accent);
-    background: rgba(232,255,60,.08);
-    padding: 0 4px;
-    color: var(--accent);
-  }
-
-  /* EDITOR */
-  .editor-wrap {
-    border: 1px solid var(--border);
-    background: #000;
-    margin-bottom: 1rem;
-  }
-  .editor-bar {
-    padding: .6rem 1rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    background: #0d0d0d;
-  }
-  .editor-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .editor-dot:nth-child(1) { background: #ff5f57; }
-  .editor-dot:nth-child(2) { background: #febc2e; }
-  .editor-dot:nth-child(3) { background: #28c840; }
-  .editor-filename {
-    font-size: .65rem;
-    color: var(--muted);
-    margin-left: .5rem;
-    letter-spacing: .05em;
-  }
-  .code-editor {
-    width: 100%;
-    min-height: 140px;
-    background: transparent;
-    border: none;
-    color: var(--fg);
-    font-family: 'Syne Mono', monospace;
-    font-size: .85rem;
-    line-height: 1.8;
-    padding: 1.5rem;
-    resize: vertical;
-    outline: none;
-    tab-size: 4;
-  }
-
-  /* MULTIPLE CHOICE */
-  .choices {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .8rem;
-    margin-bottom: 1.5rem;
-  }
-  .choice-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--fg);
-    font-family: 'Space Mono', monospace;
-    font-size: .78rem;
-    padding: 1rem 1.2rem;
-    text-align: left;
-    cursor: pointer;
-    transition: all .2s;
-    line-height: 1.5;
-  }
-  .choice-btn:hover { border-color: var(--fg); background: #111; }
-  .choice-btn.correct { border-color: var(--success); background: rgba(168,255,60,.08); color: var(--success); }
-  .choice-btn.wrong { border-color: var(--error); background: rgba(255,60,92,.08); color: var(--error); }
-
-  /* FILL IN THE BLANKS */
-  .fill-input {
-    background: rgba(232,255,60,.05);
-    border: 1px solid var(--accent);
-    border-radius: 0;
-    color: var(--accent);
-    font-family: 'Syne Mono', monospace;
-    font-size: .85rem;
-    padding: .3rem .6rem;
-    outline: none;
-    min-width: 100px;
-    max-width: 160px;
-  }
-  .fill-input:focus { background: rgba(232,255,60,.1); }
-
-  /* ACTIONS */
-  .challenge-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
-  }
-  .run-btn {
-    background: var(--accent);
-    color: var(--bg);
-    border: none;
-    font-family: 'Space Mono', monospace;
-    font-size: .75rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: .9rem 2rem;
-    cursor: pointer;
-    transition: all .2s;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-  }
-  .run-btn:hover { background: var(--fg); }
-  .run-btn:active { transform: scale(.98); }
-  .next-btn {
-    background: transparent;
-    color: var(--fg);
-    border: 1px solid var(--border);
-    font-family: 'Space Mono', monospace;
-    font-size: .75rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: .9rem 2rem;
-    cursor: pointer;
-    transition: all .2s;
-    display: none;
-  }
-  .next-btn:hover { border-color: var(--fg); }
-  .next-btn.show { display: inline-flex; align-items: center; gap: .5rem; }
-  .back-lang-btn {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    font-family: 'Space Mono', monospace;
-    font-size: .75rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    padding: .9rem 2rem;
-    cursor: pointer;
-    transition: all .2s;
-  }
-  .back-lang-btn:hover { color: var(--fg); border-color: var(--fg); }
-
-  /* FEEDBACK */
-  .feedback-box {
-    border: 1px solid var(--border);
-    padding: 1.5rem 2rem;
-    margin-top: 1rem;
-    display: none;
-    animation: slideUp .3s ease;
-  }
-  .feedback-box.show { display: block; }
-  .feedback-box.success { border-color: var(--success); background: rgba(168,255,60,.04); }
-  .feedback-box.error { border-color: var(--error); background: rgba(255,60,92,.04); }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .feedback-status {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    margin-bottom: .5rem;
-  }
-  .feedback-box.success .feedback-status { color: var(--success); }
-  .feedback-box.error .feedback-status { color: var(--error); }
-  .feedback-text { font-size: .8rem; line-height: 1.8; color: var(--muted); }
-  .feedback-text code {
-    font-family: 'Syne Mono', monospace;
-    color: var(--accent);
-    background: rgba(232,255,60,.08);
-    padding: .1rem .3rem;
-  }
-
-  /* PROGRESS */
-  .progress-wrap {
-    margin-bottom: 2rem;
-  }
-  .progress-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: .65rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: .5rem;
-  }
-  .progress-bar {
-    height: 2px;
-    background: var(--border);
-    position: relative;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    transition: width .4s ease;
-  }
-
-  /* SCORE */
-  .score-display {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    font-size: 1.1rem;
-  }
-  .score-display span { color: var(--accent); }
-
-  /* CELEBRATION */
-  #celebration {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 200;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 2rem;
-  }
-  #celebration.show { display: flex; }
-  .cel-emoji { font-size: 5rem; margin-bottom: 1rem; }
-  .cel-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(2.5rem, 8vw, 6rem);
-    letter-spacing: -.04em;
-    line-height: .9;
-    margin-bottom: 1rem;
-  }
-  .cel-title .acc { color: var(--accent); }
-  .cel-sub { font-size: .85rem; color: var(--muted); margin-bottom: 2rem; }
-  .particles {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 199;
-  }
-
-  /* ── HOW IT WORKS ── */
-  #how {
-    padding: 6rem 2.5rem;
-    border-top: 1px solid var(--border);
-  }
-  .how-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-top: 3rem;
-  }
-  .how-item {
-    background: var(--bg);
-    padding: 2.5rem 2rem;
-  }
-  .how-num {
-    font-family: 'Syne Mono', monospace;
-    font-size: 3rem;
-    color: var(--border);
-    line-height: 1;
-    margin-bottom: 1rem;
-  }
-  .how-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin-bottom: .5rem;
-  }
-  .how-desc { font-size: .78rem; color: var(--muted); line-height: 1.7; }
-
-  /* ── FOOTER ── */
-  footer {
-    padding: 3rem 2.5rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  .footer-logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    color: var(--accent);
-    font-size: 1rem;
-  }
-  .footer-text { font-size: .7rem; color: var(--muted); }
-
-  /* RESPONSIVE */
-  @media (max-width: 700px) {
-    nav { padding: 1rem 1.2rem; }
-    .nav-links { display: none; }
-    #hero, #language-select, #game-area, #how { padding-left: 1.2rem; padding-right: 1.2rem; }
-    .lang-cards { grid-template-columns: 1fr; }
-    .choices { grid-template-columns: 1fr; }
-    .hero-title { font-size: clamp(2.5rem, 14vw, 5rem); }
-  }
-
-  /* ANIMATED ENTRANCE */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity .6s ease, transform .6s ease;
-  }
-  .fade-in.visible { opacity: 1; transform: none; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Fardas - IFJC GEFA</title>
+    <!-- Tailwind CSS para estilização moderna -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts para tipografia premium -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Custom scrollbar para uma interface mais limpa */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
 
-<div id="cursor"></div>
+    <!-- Header / Barra de Navegação -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-600 text-white p-2.5 rounded-xl shadow-md shadow-emerald-200">
+                    <!-- SVG do Ícone de Camisa / Farda -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 11l3-3m0 0l3 3m-3-3v8m0-13a9 9 0 110 18 9 9 0 010-18z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">Gestão de Fardamento</h1>
+                    <p class="text-xs text-slate-500 font-medium">Controlo de Encomendas & Produção — IFJC GEFA</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="openAddModal()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-emerald-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Novo Pedido
+                </button>
+                <button onclick="exportToCSV()" class="flex items-center gap-2 bg-white hover:bg-slate-50 active:scale-95 border border-slate-200 transition text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Exportar Planilha
+                </button>
+            </div>
+        </div>
+    </header>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">CODEQUEST</div>
-  <div class="nav-links">
-    <a href="#language-select">Linguagens</a>
-    <a href="#how">Como Funciona</a>
-  </div>
-</nav>
+    <!-- Conteúdo Principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-grid-bg"></div>
-  <div class="hero-tag">Plataforma de ensino interativo — 2026</div>
-  <h1 class="hero-title">
-    <span class="line">Aprenda a</span>
-    <span class="line accent">programar</span>
-    <span class="line outline">jogando.</span>
-  </h1>
-  <div class="typing-demo" id="typingDemo"></div>
-  <div class="hero-bottom">
-    <p class="hero-desc">
-      Desafios práticos, feedback imediato e uma curva de aprendizado que respeita o seu ritmo. Lógica de programação na forma mais direta possível.
-    </p>
-    <div class="hero-cta">
-      <a href="#language-select" class="btn btn-python">▶ Python</a>
-      <a href="#language-select" class="btn btn-java">▶ Java</a>
+        <!-- Grid de Cartões de Métricas (Totalizadores Automáticos) -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Total de Pedidos Registados -->
+            <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Registos Totais</p>
+                    <h3 class="text-2xl font-bold text-slate-950 mt-1" id="metric-total-records">23</h3>
+                    <p class="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                        <span class="inline-block w-2 h-2 rounded-full bg-indigo-500"></span>
+                        Respostas do formulário
+                    </p>
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-xl text-indigo-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Total Real de Camisas a Produzir -->
+            <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total de Fardas</p>
+                    <h3 class="text-2xl font-bold text-slate-950 mt-1" id="metric-total-fardas">25</h3>
+                    <p class="text-xs text-emerald-600 mt-1 font-medium flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Soma real das unidades
+                    </p>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Faturação Estimada (R$ 68,00 por farda) -->
+            <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Valor Estimado</p>
+                    <h3 class="text-2xl font-bold text-slate-950 mt-1" id="metric-total-value">R$ 1.700,00</h3>
+                    <p class="text-xs text-slate-400 mt-1">Cálculo: R$ 68,00 / unidade</p>
+                </div>
+                <div class="bg-amber-50 p-3 rounded-xl text-amber-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Percentual de Pagamento Total Consolidado -->
+            <div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pagamento Integral</p>
+                    <h3 class="text-2xl font-bold text-slate-950 mt-1" id="metric-payment-full">14 / 23</h3>
+                    <p class="text-xs text-indigo-600 mt-1 font-semibold" id="metric-payment-pct">60.8% dos pedidos pagos</p>
+                </div>
+                <div class="bg-blue-50 p-3 rounded-xl text-blue-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Distribuição de Produção por Tamanhos -->
+        <section class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <h3 class="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <span class="w-2 h-4 bg-emerald-600 rounded"></span>
+                Distribuição de Tamanhos & Modelos de Fardamento (Contagem Real de Camisas)
+            </h3>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4" id="distribution-grid">
+                <!-- Preenchido dinamicamente via JS -->
+            </div>
+        </section>
+
+        <!-- Barra de Ferramentas da Tabela (Filtros e Busca) -->
+        <section class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-3">
+            <div class="flex flex-col lg:flex-row gap-3">
+                <!-- Barra de pesquisa -->
+                <div class="relative flex-grow">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </span>
+                    <input type="text" id="search-input" oninput="applyFilters()" placeholder="Pesquisar por nome, matrícula, email ou turma..." class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition outline-none">
+                </div>
+
+                <!-- Filtros Select rápidos -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <select id="filter-size" onchange="applyFilters()" class="text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-600 font-medium focus:ring-2 focus:ring-emerald-500/20 outline-none">
+                        <option value="">Tamanho (Todos)</option>
+                        <option value="PP">PP</option>
+                        <option value="P">P</option>
+                        <option value="M">M</option>
+                        <option value="G">G</option>
+                        <option value="XGG">XGG / XG</option>
+                    </select>
+
+                    <select id="filter-model" onchange="applyFilters()" class="text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-600 font-medium focus:ring-2 focus:ring-emerald-500/20 outline-none">
+                        <option value="">Modelo (Todos)</option>
+                        <option value="Sim">Baby Look</option>
+                        <option value="Não">Normal / Unissexo</option>
+                    </select>
+
+                    <select id="filter-payment" onchange="applyFilters()" class="text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-600 font-medium focus:ring-2 focus:ring-emerald-500/20 outline-none">
+                        <option value="">Pagamento (Todos)</option>
+                        <option value="total">Pagamento Total</option>
+                        <option value="parcelado">Parcelado (2x)</option>
+                    </select>
+
+                    <button onclick="clearFilters()" class="text-xs font-semibold text-slate-400 hover:text-emerald-600 transition px-2 py-2">
+                        Limpar Filtros
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-between text-xs text-slate-500 px-1 pt-1 border-t border-slate-100">
+                <span id="filtered-count-label">A mostrar todos os 23 registos</span>
+                <span class="flex items-center gap-2">
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-rose-50 border border-rose-200 rounded-full inline-block"></span> Possível Duplicado</span>
+                </span>
+            </div>
+        </section>
+
+        <!-- Planilha de Dados / Tabela Principal -->
+        <section class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] font-bold uppercase tracking-wider">
+                            <th class="py-4 px-4 text-center">Ações</th>
+                            <th class="py-4 px-4">Estudante</th>
+                            <th class="py-4 px-4">Turma / Matrícula</th>
+                            <th class="py-4 px-4">Tamanho</th>
+                            <th class="py-4 px-4">Modelo</th>
+                            <th class="py-4 px-4">Qtd</th>
+                            <th class="py-4 px-4">Forma Pagamento</th>
+                            <th class="py-4 px-4">Comprovativo</th>
+                            <th class="py-4 px-4">Notas do Pedido</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-sm text-slate-700" id="table-body">
+                        <!-- Preenchido dinamicamente via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© 2026 GEFA — IFJC. Desenvolvido para administração ágil de encomendas escolares.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL: Adicionar / Editar Registo -->
+    <div id="record-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                <h3 class="font-bold text-slate-900" id="modal-title">Adicionar Encomenda</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="record-form" onsubmit="saveRecord(event)" class="p-6 space-y-4 overflow-y-auto">
+                <input type="hidden" id="form-id">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nome Completo</label>
+                    <input type="text" id="form-name" required class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Turma / Curso</label>
+                        <input type="text" id="form-class" required class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition" placeholder="Ex: Info1V">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Matrícula</label>
+                        <input type="text" id="form-enrollment" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Email</label>
+                        <input type="email" id="form-email" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Contacto / Whatsapp</label>
+                        <input type="text" id="form-phone" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tamanho Base</label>
+                        <select id="form-size" required class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                            <option value="PP">PP</option>
+                            <option value="P">P</option>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                            <option value="XGG">XGG</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Baby Look?</label>
+                        <select id="form-babylook" required class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                            <option value="Não">Não</option>
+                            <option value="Sim">Sim</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Qtd Total Fardas</label>
+                        <input type="number" id="form-quantity" required min="1" value="1" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Forma de Pagamento</label>
+                    <select id="form-payment" required class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition">
+                        <option value="Pix - Pagamento total">Pix - Pagamento Integral (R$ 68,00/cada)</option>
+                        <option value="Pix - 2x de 34,00 (vezes total de fardas)">Pix - Parcelado (2x de R$ 34,00/cada)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Link do Comprovativo (Google Drive)</label>
+                    <input type="url" id="form-proof" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition" placeholder="https://drive.google.com/...">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Notas / Especificações adicionais</label>
+                    <textarea id="form-notes" rows="2" class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition" placeholder="Ex: Detalhes específicos de cores ou tamanhos extras..."></textarea>
+                </div>
+
+                <div class="pt-4 border-t border-slate-100 flex gap-2 justify-end">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-slate-200 hover:bg-slate-50 transition rounded-xl text-sm font-semibold text-slate-700">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 transition text-white rounded-xl text-sm font-semibold">
+                        Guardar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
-  <div class="hero-scroll">scroll</div>
-</section>
 
-<!-- LANGUAGE SELECT -->
-<section id="language-select">
-  <div class="section-label">Escolha sua linguagem</div>
-  <div class="lang-cards">
-    <div class="lang-card python" onclick="startGame('python')">
-      <div class="lang-icon">🐍</div>
-      <div class="lang-name">Python</div>
-      <p class="lang-desc">Sintaxe limpa e poderosa. A linguagem favorita para quem está começando — e para quem já sabe muito.</p>
-      <div class="lang-levels">
-        <span class="level-badge">Iniciante</span>
-        <span class="level-badge">Intermediário</span>
-        <span class="level-badge">8 desafios</span>
-      </div>
-      <div class="lang-arrow">↗</div>
-    </div>
-    <div class="lang-card java" onclick="startGame('java')">
-      <div class="lang-icon">☕</div>
-      <div class="lang-name">Java</div>
-      <p class="lang-desc">Estruturada e robusta. Aprenda os fundamentos de OOP, tipos e estrutura de código com desafios progressivos.</p>
-      <div class="lang-levels">
-        <span class="level-badge">Iniciante</span>
-        <span class="level-badge">Intermediário</span>
-        <span class="level-badge">8 desafios</span>
-      </div>
-      <div class="lang-arrow">↗</div>
-    </div>
-  </div>
-</section>
+    <!-- SCRIPT DE INTELIGÊNCIA E DADOS INTERATIVOS -->
+    <script>
+        // Dados originais do ficheiro da folha de cálculo fornecido
+        const rawInitialData = [
+            { id: "1", timestamp: "5/2/2026 11:24:59", email: "yasmimleticia0610@gmail.com", nome: "Yasmin Letícia do Nascimento Gomes", matricula: "20261064010039", turma: "Info1V", telefone: "+55 84 9460-2078", tamanho: "P", babyLook: "Sim", fardaAdicional: "Não", notas: "1 uma farda tamanho P (baby look)", pagamento: "Pix - 2x de 34,00 (vezes total de fardas)", comprovativo: "", quantidade: 1, duplicado: false },
+            { id: "2", timestamp: "5/2/2026 12:08:09", email: "marcelamayana315@gmail.com", nome: "Marcela Mayana Teixeira da Silva", matricula: "20251064010044", turma: "Informática 2", telefone: "84988468561", tamanho: "P", babyLook: "Sim", fardaAdicional: "Não", notas: "1 Farda tamanho P baby look", pagamento: "Pix - 2x de 34,00 (vezes total de fardas)", comprovativo: "", quantidade: 1, duplicado: false },
+            { id: "3", timestamp: "5/2/2026 21:24:22", email: "joselefelix8@gmail.com", nome: "Anderson Micael da Silva felix", matricula: "20261064010012", turma: "Informatica", telefone: "84991993899", tamanho: "M", babyLook: "Não", fardaAdicional: "Não", notas: "1X farda tamanho M", pagamento: "Pix - 2x de 34,00 (vezes total de fardas)", comprovativo: "", quantidade: 1, duplicado: true },
+            { id: "4", timestamp: "5/3/2026 9:14:43", email: "alvescaioou@gmail.com", nome: "Caio Alves da Silva", matricula: "20261064010063", turma: "INFO1M", telefone: "(84) 98712-4124", tamanho: "XGG", babyLook: "Não", fardaAdicional: "Não", notas: "1X Farda - Tamanho XG", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=1CIW4jTJqEa6t1hBVnnEzVaFGi_HleFqC", quantidade: 1, duplicado: false },
+            { id: "5", timestamp: "5/4/2026 7:31:47", email: "italoravimelo@gmail.com", nome: "Ítalo Ravi Silva de Melo", matricula: "20251061100030", turma: "Administração 2", telefone: "84991928245", tamanho: "P", babyLook: "Não", fardaAdicional: "Sim", notas: "2x fardas tamanho P.", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=1hc5uXxKKSvM1RjhgoB5GJ4pNbVMT6Cq2", quantidade: 2, duplicado: false },
+            { id: "6", timestamp: "5/6/2026 9:59:56", email: "mikaelluca485@gmail.com", nome: "Mikael Lucas Pereira da Silva", matricula: "20261064010037", turma: "Info1v", telefone: "84991223420", tamanho: "XGG", babyLook: "Não", fardaAdicional: "Não", notas: "1x farda-tamanho XGG", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=1WjHze_vm7JqWSNZpsS7IA1NTAPCfQJ9t", quantidade: 1, duplicado: false },
+            { id: "7", timestamp: "5/6/2026 16:49:21", email: "lucasbarbosa10052010@gmail.com", nome: "José Lucas Barbosa de Lima", matricula: "20261062010005", turma: "Eletro 1", telefone: "98836-9242", tamanho: "G", babyLook: "Não", fardaAdicional: "Não", notas: "1 Farda - Tamanho G", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=1HrMcj2eG66ZLISb5yqWSAL-lKIXh31Rr", quantidade: 1, duplicado: false },
+            { id: "8", timestamp: "5/7/2026 13:45:47", email: "anajuliamfu@gmail.com", nome: "Ana Júlia Oliveira de Souza", matricula: "20261062010036", turma: "Eletrotécnica M", telefone: "84 9108- 9825", tamanho: "P", babyLook: "Sim", fardaAdicional: "Não", notas: "1 farda tamanho P (baby look)", pagamento: "Pix - Pagamento total", comprovativo: "", quantidade: 1, duplicado: false },
+            { id: "9", timestamp: "5/9/2026 16:19:57", email: "carolinedantas0688@gmail.com", nome: "Caroline Lima de Medeiros", matricula: "20261061100021", turma: "Adm1", telefone: "84994601177", tamanho: "PP", babyLook: "Sim", fardaAdicional: "Não", notas: "não pedi farda adicional", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=1B14nQuwqLn7pJd5LBhdzYNgofmUFEek9", quantidade: 1, duplicado: false },
+            { id: "10", timestamp: "5/9/2026 20:07:47", email: "mariaeduardamodestosmg123@gmail.com", nome: "Maria Eduarda Barbosa Modesto", matricula: "20251061100027", turma: "Administração 2", telefone: "(84) 994183713", tamanho: "M", babyLook: "Sim", fardaAdicional: "Não", notas: "Comprei apenas uma farda", pagamento: "Pix - 2x de 34,00 (vezes total de fardas)", comprovativo: "https://drive.google.com/open?id=1_7j4QF4swybMcKcMI5Qz-qocs2F5db6q", quantidade: 1, duplicado: false },
+            { id: "11", timestamp: "5/10/2026 19:36:18", email: "babaro2009@gmail.com", nome: "Franklim Emanoel Praxedes Soares", matricula: "20251064010029", turma: "INFO 2", telefone: "(84)994681790", tamanho: "M", babyLook: "Não", fardaAdicional: "Não", notas: "1 farda tamanho m", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=1GmJBrxApNHz1n1_F2EQCqfcgYwSPsu-F", quantidade: 1, duplicado: false },
+            { id: "12", timestamp: "5/12/2026 7:00:58", email: "s.lindervam20@gmail.com", nome: "Lindervam Pereira da Silva", matricula: "20241064010020", turma: "Info 3", telefone: "(84) 991190765", tamanho: "G", babyLook: "Não", fardaAdicional: "Sim", notas: "2x fardas tamanho G", pagamento: "Pix - 2x de 34,00 (vezes total de fardas)", comprovativo: "https://drive.google.com/open?id=1Vh19ilbq8AWDiuh06ihiqtWg18UkwAr8", quantidade: 2, duplicado: false },
+            { id: "13", timestamp: "5/12/2026 18:22:01", email: "mayaralimaa012@gmail.com", nome: "Mayara Lima da Silva", matricula: "20261061100028", turma: "ADM-1", telefone: "84 991125437", tamanho: "P", babyLook: "Sim", fardaAdicional: "Não", notas: "1x farda - tamanho p", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=1nEfByegIyuY4SXlg-Q_5SoTvbzbuDm9w", quantidade: 1, duplicado: false },
+            { id: "14", timestamp: "5/13/2026 8:57:18", email: "layzafrancinny0@gmail.com", nome: "Layza Francinny de Morais de Andrade", matricula: "20261061100036", turma: "ADM 2026.1", telefone: "84994591318", tamanho: "M", babyLook: "Sim", fardaAdicional: "Não", notas: "1x farda tamanho M (baby look)", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=1KdB_DPiPIr50kKEYbGal4C1uA0OXbKyb", quantidade: 1, duplicado: false },
+            { id: "15", timestamp: "5/13/2026 13:19:03", email: "geovanaemmily24@gmail.com", nome: "Geovana Emmily da Silva Melo", matricula: "20241062010012", turma: "Eletro 3M", telefone: "84 991689517", tamanho: "P", babyLook: "Não", fardaAdicional: "Não", notas: "Uma farda, tamnho P normal.", pagamento: "Pix - 2x de 34,00 (vezes total de fardas)", comprovativo: "https://drive.google.com/open?id=1Sgi3pWhiRP_CDQL4jxPEr3HAk4fVY8tc", quantidade: 1, duplicado: false },
+            { id: "16", timestamp: "5/14/2026 8:43:58", email: "joselefelix8@gmail.com", nome: "Anderson Micael da Silva felix", matricula: "20261064010012", turma: "Informática", telefone: "84991993899", tamanho: "M", babyLook: "Não", fardaAdicional: "Não", notas: "1 farda tamanho M", pagamento: "Pix - 2x de 34,00 (vezes total de fardas)", comprovativo: "https://drive.google.com/open?id=12_zk2gwiMlIWRdkaE9EJlGyfH0-XjHYm", quantidade: 1, duplicado: true },
+            { id: "17", timestamp: "5/14/2026 10:41:59", email: "joaomatheusjm95924@gmail.com", nome: "João Matheus Silva de Oliveira", matricula: "20241061100035", turma: "Adm3", telefone: "84 991195690", tamanho: "G", babyLook: "Não", fardaAdicional: "Não", notas: ".", pagamento: "Pix - Pagamento total", comprovativo: "", quantidade: 1, duplicado: false },
+            { id: "18", timestamp: "5/14/2026 15:54:55", email: "soffisouza06@gmail.com", nome: "Maria Sofia Souza dos Santos", matricula: "20261061100019", turma: "Administração 2026.1", telefone: "(84) 99453-8676", tamanho: "P", babyLook: "Não", fardaAdicional: "Não", notas: "1x Farda - tamanho P", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=1kUVrpFYMcKjY9uZ0p4B2xAsdmxdbAgb1", quantidade: 1, duplicado: false },
+            { id: "19", timestamp: "5/15/2026 13:20:35", email: "mj7308679@gmail.com", nome: "Maria Júlia Araújo Aguiar", matricula: "20261061100022", turma: "ADM 2026", telefone: "84 9 9148-0350", tamanho: "G", babyLook: "Não", fardaAdicional: "Não", notas: "1x Farda, Tamanho G (unissex).", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=13ZmSFjFQlEvg8RecZl5YhWf_hSrS6WD4", quantidade: 1, duplicado: false },
+            { id: "20", timestamp: "5/15/2026 18:37:05", email: "desaanna01@gmail.com", nome: "Anna Beatriz da silva câmara", matricula: "20261062010040", turma: "Eletro 1 M", telefone: "84996503243", tamanho: "P", babyLook: "Sim", fardaAdicional: "Não", notas: "1 farda , tamanho P baby look", pagamento: "Pix - Pagamento total", comprovativo: "https://drive.google.com/open?id=1jzDuyRkAA3Mql0UBFx6uxaH03SvId_Er", quantidade: 1, duplicado: false },
+            { id: "21", timestamp: "5/15/2026 19:30:54", email: "luiz1629401@gmail.com", nome: "Luiz Cláudio da Silva melo", matricula: "20251062010037", turma: "Eletrotécnica 2", telefone: "84994551102", tamanho: "G", babyLook: "Não", fardaAdicional: "Não", notas: "1x farda-tamanho G", pagamento: "Pix - 2x de 34,00 (vezes total de fardas)", comprovativo: "https://drive.google.com/open?id=1g4aY4TwdBf11Vxs0Nag8xwuP2ySL8h87", quantidade: 1, duplicado: false },
+            { id: "22", timestamp: "5/25/2026 22:35:08", email: "anunciadamari16@gmail.com", nome: "Maria Anunciada da Silva Pereira", matricula: "20261064010067", turma: "Informática 1V", telefone: "994693677", tamanho: "P", babyLook: "Não", fardaAdicional: "Não", notas: "1 Farda - Tamanho P", pagamento: "Pix - Pagamento total", comprovativo: "", quantidade: 1, duplicado: false },
+            { id: "23", timestamp: "5/26/2026 10:10:38", email: "raquelemannueledesouzae@gmail.com", nome: "Raquel Emannuele de Souza Silva", matricula: "20261061100041", turma: "1° ano administração", telefone: "84999225727", tamanho: "PP", babyLook: "Sim", fardaAdicional: "Não", notas: "", pagamento: "Pix - 2x de 34,00 (vezes total de fardas)", comprovativo: "https://drive.google.com/open?id=1sy7WRNPYRYXOnItMJnOkXgEIwIK9J260", quantidade: 1, duplicado: false }
+        ];
 
-<!-- GAME AREA -->
-<section id="game-area">
-  <div class="game-header">
-    <div>
-      <div class="game-lang-badge" id="gameLangBadge">Python</div>
-      <h2 class="game-title" id="gameTitle">Nível Iniciante</h2>
-    </div>
-    <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
-      <div class="score-display">Pontos: <span id="scoreDisplay">0</span></div>
-      <button class="back-lang-btn" onclick="backToLanguages()">← Linguagens</button>
-    </div>
-  </div>
+        // Inicializa do localStorage se existir, senão usa dados originais
+        let orders = JSON.parse(localStorage.getItem('fardas_orders')) || rawInitialData;
 
-  <div class="progress-wrap">
-    <div class="progress-info">
-      <span id="progressText">Desafio 1 de 8</span>
-      <span id="levelLabel">INICIANTE</span>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-  </div>
+        // Renderizar Métricas de Topo
+        function updateMetrics() {
+            const totalRegistros = orders.length;
+            const totalFardas = orders.reduce((acc, current) => acc + Number(current.quantidade), 0);
+            const valorTotal = totalFardas * 68;
+            
+            const pagamentosTotais = orders.filter(o => o.pagamento.includes("total")).length;
+            const pctPagamentoTotal = totalRegistros > 0 ? ((pagamentosTotais / totalRegistros) * 100).toFixed(1) : 0;
 
-  <div class="level-tabs">
-    <button class="level-tab active" onclick="setLevel('beginner')">🟢 Iniciante</button>
-    <button class="level-tab" onclick="setLevel('intermediate')">🟡 Intermediário</button>
-  </div>
+            document.getElementById('metric-total-records').innerText = totalRegistros;
+            document.getElementById('metric-total-fardas').innerText = totalFardas;
+            document.getElementById('metric-total-value').innerText = `R$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+            document.getElementById('metric-payment-full').innerText = `${pagamentosTotais} / ${totalRegistros}`;
+            document.getElementById('metric-payment-pct').innerText = `${pctPagamentoTotal}% com liquidação total`;
 
-  <div id="challengeContainer"></div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="section-label">Como funciona</div>
-  <div class="how-grid">
-    <div class="how-item fade-in">
-      <div class="how-num">01</div>
-      <div class="how-title">Escolha a linguagem</div>
-      <p class="how-desc">Python ou Java — comece pelo que faz sentido pra você ou pelo que o seu curso exige.</p>
-    </div>
-    <div class="how-item fade-in">
-      <div class="how-num">02</div>
-      <div class="how-title">Resolva os desafios</div>
-      <p class="how-desc">Complete código, corrija erros, preveja saídas e responda desafios de lógica.</p>
-    </div>
-    <div class="how-item fade-in">
-      <div class="how-num">03</div>
-      <div class="how-title">Feedback imediato</div>
-      <p class="how-desc">Cada resposta gera uma explicação. Certo ou errado, você vai entender o porquê.</p>
-    </div>
-    <div class="how-item fade-in">
-      <div class="how-num">04</div>
-      <div class="how-title">Suba de nível</div>
-      <p class="how-desc">Iniciante → Intermediário. A dificuldade cresce com você de forma progressiva.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">CODEQUEST</div>
-  <p class="footer-text">Aprenda programação — na prática, com jogos.</p>
-</footer>
-
-<!-- CELEBRATION -->
-<div id="celebration">
-  <canvas class="particles" id="particleCanvas"></canvas>
-  <div class="cel-emoji">🏆</div>
-  <h2 class="cel-title">Fase<br><span class="acc">Completa!</span></h2>
-  <p class="cel-sub" id="celSub">Você acertou todos os desafios dessa fase.</p>
-  <button class="run-btn" onclick="closeCelebration()" style="margin-top:1rem;">Continuar →</button>
-</div>
-
-<script>
-// ─── CURSOR ───────────────────────────────────────────
-const cursor = document.getElementById('cursor');
-document.addEventListener('mousemove', e => {
-  cursor.style.left = e.clientX - 5 + 'px';
-  cursor.style.top = e.clientY - 5 + 'px';
-});
-document.addEventListener('mousedown', () => cursor.classList.add('big'));
-document.addEventListener('mouseup', () => cursor.classList.remove('big'));
-
-// ─── TYPING DEMO ──────────────────────────────────────
-const phrases = [
-  'print("Olá, Mundo!")',
-  'for i in range(10): ...',
-  'def calcular(a, b): return a + b',
-  'System.out.println("Java!");',
-  'if (x > 0) { System.out.println(x); }',
-  'int soma = 0; for(int i=0;i<n;i++) soma+=i;'
-];
-let phraseIdx = 0, charIdx = 0, deleting = false;
-const typingEl = document.getElementById('typingDemo');
-function typeLoop() {
-  const phrase = phrases[phraseIdx];
-  if (!deleting) {
-    typingEl.textContent = phrase.slice(0, charIdx++);
-    if (charIdx > phrase.length) { deleting = true; setTimeout(typeLoop, 1500); return; }
-  } else {
-    typingEl.textContent = phrase.slice(0, charIdx--);
-    if (charIdx < 0) { deleting = false; phraseIdx = (phraseIdx+1) % phrases.length; }
-  }
-  setTimeout(typeLoop, deleting ? 40 : 70);
-}
-typeLoop();
-
-// ─── FADE IN ON SCROLL ────────────────────────────────
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: .15 });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-// ─── CHALLENGES DATA ──────────────────────────────────
-const challenges = {
-  python: {
-    beginner: [
-      {
-        type: 'predict',
-        question: 'O que esse código vai imprimir?',
-        context: 'Analise o código abaixo e escolha a saída correta.',
-        code: `<span class="fn">print</span>(<span class="str">"Olá"</span>)\n<span class="fn">print</span>(<span class="str">"Mundo"</span>)\n<span class="fn">print</span>(<span class="num">1</span> + <span class="num">2</span>)`,
-        options: ['Olá\nMundo\n12', 'Olá\nMundo\n3', 'OláMundo3', 'Erro'],
-        correct: 1,
-        feedback: {
-          success: '✓ Correto! O <code>print()</code> exibe cada valor em uma linha separada. <code>1 + 2</code> resulta em <code>3</code>, não <code>"12"</code>.',
-          error: 'Quase! O <code>print()</code> sempre quebra a linha após imprimir. E <code>1 + 2</code> é uma soma numérica — resultado: <code>3</code>.'
+            updateSizeDistribution();
         }
-      },
-      {
-        type: 'fill',
-        question: 'Complete o código para criar uma variável chamada "nome" com o valor "Ana":',
-        context: 'Em Python, variáveis são criadas simplesmente atribuindo um valor. Não precisa de tipo declarado.',
-        code: `<span class="blank"><input class="fill-input" id="fill_0_0" placeholder="..."></span> = <span class="str">"Ana"</span>\n<span class="fn">print</span>(nome)`,
-        blanks: [{ id: 'fill_0_0', answer: 'nome' }],
-        feedback: {
-          success: '✓ Perfeito! Em Python não precisamos declarar o tipo — só escrever <code>nome = "Ana"</code> já cria a variável.',
-          error: 'O nome da variável deve ser exatamente <code>nome</code>. Em Python, variáveis são criadas com a sintaxe: <code>nome_da_variável = valor</code>.'
+
+        // Calcula e desenha os blocos de distribuição de tamanhos
+        function updateSizeDistribution() {
+            // Inicializar contadores
+            const dist = {
+                'PP': { baby: 0, normal: 0 },
+                'P': { baby: 0, normal: 0 },
+                'M': { baby: 0, normal: 0 },
+                'G': { baby: 0, normal: 0 },
+                'XGG': { baby: 0, normal: 0 }
+            };
+
+            orders.forEach(order => {
+                const tam = order.tamanho === 'XG' ? 'XGG' : order.tamanho;
+                if (dist[tam]) {
+                    if (order.babyLook === 'Sim') {
+                        dist[tam].baby += Number(order.quantidade);
+                    } else {
+                        dist[tam].normal += Number(order.quantidade);
+                    }
+                }
+            });
+
+            const colors = {
+                'PP': 'indigo',
+                'P': 'emerald',
+                'M': 'amber',
+                'G': 'sky',
+                'XGG': 'rose'
+            };
+
+            let html = '';
+            for (const [tamanho, valores] of Object.entries(dist)) {
+                const totalPorTamanho = valores.baby + valores.normal;
+                const c = colors[tamanho];
+                html += `
+                    <div class="bg-slate-50 border border-slate-150 rounded-xl p-3 flex flex-col justify-between hover:shadow-sm transition">
+                        <div>
+                            <span class="text-xs font-bold text-slate-500">${tamanho}</span>
+                            <div class="text-xl font-extrabold text-slate-900 mt-1">${totalPorTamanho} fardas</div>
+                        </div>
+                        <div class="mt-3 space-y-1 pt-2 border-t border-slate-200 text-[11px] text-slate-500">
+                            <div class="flex justify-between">
+                                <span>Baby Look:</span>
+                                <span class="font-bold text-slate-700">${valores.baby}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Normal:</span>
+                                <span class="font-bold text-slate-700">${valores.normal}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('distribution-grid').innerHTML = html;
         }
-      },
-      {
-        type: 'fix',
-        question: 'Esse código tem um erro. Qual é a versão correta?',
-        context: 'Identifique o bug e escolha a opção corrigida.',
-        code: `<span class="kw">if</span> x = <span class="num">10</span>:\n    <span class="fn">print</span>(<span class="str">"dez"</span>)`,
-        options: [
-          'if x == 10:\n    print("dez")',
-          'if x = 10\n    print("dez")',
-          'if (x = 10):\n    print("dez")',
-          'if x === 10:\n    print("dez")'
-        ],
-        correct: 0,
-        feedback: {
-          success: '✓ Exato! Em Python (e na maioria das linguagens), <code>==</code> compara valores. O <code>=</code> é só para atribuição.',
-          error: 'O erro está no uso de <code>=</code> em uma condição. Para comparar, use <code>==</code>. O <code>=</code> é só para atribuir valores.'
+
+        // Renderiza a lista na tabela
+        function renderTable(dataToRender) {
+            const tableBody = document.getElementById('table-body');
+            
+            if (dataToRender.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="py-12 text-center text-slate-400 font-medium">
+                            Nenhum registo encontrado com os filtros aplicados.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = dataToRender.map(order => {
+                const rowClass = order.duplicado ? 'bg-rose-50/40 hover:bg-rose-50/70 transition' : 'hover:bg-slate-50 transition';
+                const babyBadge = order.babyLook === 'Sim' 
+                    ? '<span class="px-2 py-0.5 bg-pink-100 text-pink-700 rounded-md text-xs font-semibold">Baby Look</span>' 
+                    : '<span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-xs font-semibold">Normal</span>';
+                
+                const paymentBadge = order.pagamento.includes("total")
+                    ? '<span class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-medium inline-block">Pago Total</span>'
+                    : '<span class="px-2 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg text-xs font-medium inline-block">Parcelado (2x)</span>';
+
+                const docButton = order.comprovativo 
+                    ? `<a href="${order.comprovativo}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 hover:underline font-semibold bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1.5 rounded-lg transition">
+                         Ver Comp.
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                         </svg>
+                       </a>`
+                    : '<span class="text-xs text-slate-400 italic">Sem anexo</span>';
+
+                return `
+                    <tr class="${rowClass} group">
+                        <!-- Ações -->
+                        <td class="py-3 px-4 text-center whitespace-nowrap">
+                            <div class="flex items-center justify-center gap-1">
+                                <button onclick="openEditModal('${order.id}')" title="Editar registo" class="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-1.5a1.356 1.356 0 112 0L2.12 18.12l-5.222.87 1.154-5.222 14.304-14.304z" />
+                                    </svg>
+                                </button>
+                                <button onclick="deleteRecord('${order.id}')" title="Eliminar registo" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                                <button onclick="toggleDuplicate('${order.id}')" title="${order.duplicado ? 'Remover marcação de duplicado' : 'Marcar como duplicado'}" class="p-1.5 ${order.duplicado ? 'text-amber-500 hover:text-slate-400' : 'text-slate-300 hover:text-amber-500'} rounded-lg transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" />
+                                        <path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h8a2 2 0 00-2-2H5z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                        <!-- Estudante -->
+                        <td class="py-3 px-4">
+                            <div class="font-semibold text-slate-900 flex items-center gap-1.5">
+                                ${order.nome}
+                                ${order.duplicado ? '<span class="text-[10px] tracking-wide font-extrabold text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded-full uppercase">Duplicado</span>' : ''}
+                            </div>
+                            <div class="text-xs text-slate-400 flex flex-col sm:flex-row sm:gap-2">
+                                <span>${order.email}</span>
+                                <span class="hidden sm:inline text-slate-300">|</span>
+                                <span>${order.telefone}</span>
+                            </div>
+                        </td>
+                        <!-- Turma / Matrícula -->
+                        <td class="py-3 px-4 whitespace-nowrap">
+                            <div class="font-medium text-slate-800">${order.turma}</div>
+                            <div class="text-xs text-slate-400">Mat: ${order.matricula || 'N/A'}</div>
+                        </td>
+                        <!-- Tamanho -->
+                        <td class="py-3 px-4 whitespace-nowrap font-bold text-slate-800">${order.tamanho}</td>
+                        <!-- Modelo -->
+                        <td class="py-3 px-4 whitespace-nowrap">${babyBadge}</td>
+                        <!-- Quantidade -->
+                        <td class="py-3 px-4 whitespace-nowrap font-bold text-slate-900 text-center">${order.quantidade}</td>
+                        <!-- Pagamento -->
+                        <td class="py-3 px-4 whitespace-nowrap">${paymentBadge}</td>
+                        <!-- Comprovativo -->
+                        <td class="py-3 px-4 whitespace-nowrap">${docButton}</td>
+                        <!-- Notas -->
+                        <td class="py-3 px-4 max-w-xs truncate text-xs text-slate-500" title="${order.notas || ''}">
+                            ${order.notas || '<span class="text-slate-300 italic">Sem notas</span>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
-      },
-      {
-        type: 'predict',
-        question: 'Qual o valor de "resultado" ao final?',
-        context: 'Acompanhe a execução linha por linha.',
-        code: `x = <span class="num">5</span>\ny = <span class="num">3</span>\nresultado = x * y + <span class="num">2</span>\n<span class="fn">print</span>(resultado)`,
-        options: ['17', '40', '15', '10'],
-        correct: 0,
-        feedback: {
-          success: '✓ Correto! Python segue a ordem matemática: primeiro a multiplicação <code>5 * 3 = 15</code>, depois soma <code>15 + 2 = 17</code>.',
-          error: 'Lembre da ordem das operações: primeiro multiplica <code>5 * 3 = 15</code>, depois soma o 2. Resultado: <code>17</code>.'
+
+        // Aplica todos os filtros em simultâneo
+        function applyFilters() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filterSize = document.getElementById('filter-size').value;
+            const filterModel = document.getElementById('filter-model').value;
+            const filterPayment = document.getElementById('filter-payment').value;
+
+            const filtered = orders.filter(order => {
+                // Match de barra de pesquisa
+                const matchQuery = order.nome.toLowerCase().includes(query) ||
+                                   order.email.toLowerCase().includes(query) ||
+                                   order.turma.toLowerCase().includes(query) ||
+                                   (order.matricula && order.matricula.includes(query)) ||
+                                   order.telefone.includes(query);
+                
+                // Match filtros select
+                const matchSize = !filterSize || (order.tamanho === filterSize || (filterSize === 'XGG' && order.tamanho === 'XG'));
+                const matchModel = !filterModel || order.babyLook === filterModel;
+                
+                let matchPayment = true;
+                if (filterPayment === 'total') {
+                    matchPayment = order.pagamento.includes("total");
+                } else if (filterPayment === 'parcelado') {
+                    matchPayment = order.pagamento.includes("34,00") || order.pagamento.includes("2x");
+                }
+
+                return matchQuery && matchSize && matchModel && matchPayment;
+            });
+
+            renderTable(filtered);
+            document.getElementById('filtered-count-label').innerText = `A mostrar ${filtered.length} de ${orders.length} registos`;
         }
-      }
-    ],
-    intermediate: [
-      {
-        type: 'fill',
-        question: 'Complete o loop para imprimir os números de 1 a 5:',
-        context: 'O <code>range()</code> em Python gera uma sequência de números. <code>range(1, 6)</code> gera 1, 2, 3, 4, 5.',
-        code: `<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="blank"><input class="fill-input" id="fill_1_0" placeholder="..."></span>, <span class="blank"><input class="fill-input" id="fill_1_1" placeholder="..."></span>):\n    <span class="fn">print</span>(i)`,
-        blanks: [
-          { id: 'fill_1_0', answer: '1' },
-          { id: 'fill_1_1', answer: '6' }
-        ],
-        feedback: {
-          success: '✓ Perfeito! <code>range(1, 6)</code> gera 1,2,3,4,5. O segundo parâmetro é exclusivo — por isso usamos 6 para incluir o 5.',
-          error: 'Use <code>range(1, 6)</code>. O primeiro número é onde começa (inclusivo), o segundo é onde para (exclusivo). Para incluir 5, o limite deve ser 6.'
+
+        // Limpar filtros de pesquisa
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('filter-size').value = '';
+            document.getElementById('filter-model').value = '';
+            document.getElementById('filter-payment').value = '';
+            applyFilters();
         }
-      },
-      {
-        type: 'predict',
-        question: 'O que essa função retorna quando chamada com calcular(4, 3)?',
-        context: 'Analise a lógica da função e calcule o resultado.',
-        code: `<span class="kw">def</span> <span class="fn">calcular</span>(a, b):\n    <span class="kw">if</span> a > b:\n        <span class="kw">return</span> a - b\n    <span class="kw">else</span>:\n        <span class="kw">return</span> a + b\n\n<span class="fn">print</span>(<span class="fn">calcular</span>(<span class="num">4</span>, <span class="num">3</span>))`,
-        options: ['1', '7', '12', 'None'],
-        correct: 0,
-        feedback: {
-          success: '✓ Ótimo! Como <code>4 > 3</code> é verdadeiro, a função retorna <code>a - b = 4 - 3 = 1</code>.',
-          error: 'Siga o fluxo: <code>a = 4</code>, <code>b = 3</code>. Como <code>4 > 3</code> é <code>True</code>, executa o primeiro bloco: <code>return 4 - 3 = 1</code>.'
+
+        // Marcar/Desmarcar Duplicados
+        function toggleDuplicate(id) {
+            orders = orders.map(o => o.id === id ? { ...o, duplicado: !o.duplicado } : o);
+            saveToStorage();
+            applyFilters();
+            updateMetrics();
         }
-      },
-      {
-        type: 'fix',
-        question: 'A função abaixo deveria retornar a lista apenas com números pares. O que está errado?',
-        context: 'Corrija a condição do filtro.',
-        code: `<span class="kw">def</span> <span class="fn">pares</span>(lista):\n    resultado = []\n    <span class="kw">for</span> n <span class="kw">in</span> lista:\n        <span class="kw">if</span> n % <span class="num">2</span> == <span class="num">1</span>:  <span class="cm"># erro aqui</span>\n            resultado.<span class="fn">append</span>(n)\n    <span class="kw">return</span> resultado`,
-        options: [
-          'Trocar == 1 por == 0',
-          'Trocar % por //',
-          'Trocar for por while',
-          'Trocar append por add'
-        ],
-        correct: 0,
-        feedback: {
-          success: '✓ Correto! Números pares têm resto 0 na divisão por 2. A condição correta é <code>n % 2 == 0</code>, não <code>== 1</code> (que filtra ímpares).',
-          error: 'O operador <code>%</code> retorna o resto da divisão. Números pares têm resto <code>0</code> quando divididos por 2. Então a condição deve ser <code>n % 2 == 0</code>.'
+
+        // Eliminar registo
+        function deleteRecord(id) {
+            if (confirm("Tem a certeza que deseja eliminar este registo permanentemente?")) {
+                orders = orders.filter(o => o.id !== id);
+                saveToStorage();
+                applyFilters();
+                updateMetrics();
+            }
         }
-      },
-      {
-        type: 'fill',
-        question: 'Complete a função que calcula a média de uma lista:',
-        context: 'Use <code>sum()</code> para somar e <code>len()</code> para contar os elementos.',
-        code: `<span class="kw">def</span> <span class="fn">media</span>(numeros):\n    total = <span class="fn">sum</span>(<span class="blank"><input class="fill-input" id="fill_2_0" placeholder="..."></span>)\n    quantidade = <span class="fn">len</span>(numeros)\n    <span class="kw">return</span> <span class="blank"><input class="fill-input" id="fill_2_1" placeholder="..."></span> / quantidade`,
-        blanks: [
-          { id: 'fill_2_0', answer: 'numeros' },
-          { id: 'fill_2_1', answer: 'total' }
-        ],
-        feedback: {
-          success: '✓ Excelente! <code>sum(numeros)</code> soma todos os valores, <code>len(numeros)</code> conta quantos são, e <code>total / quantidade</code> calcula a média.',
-          error: 'Precisamos de: <code>sum(numeros)</code> para somar a lista toda, e <code>total / quantidade</code> para calcular a média.'
+
+        // Abre modal para criação
+        function openAddModal() {
+            document.getElementById('record-form').reset();
+            document.getElementById('form-id').value = '';
+            document.getElementById('modal-title').innerText = "Adicionar Nova Encomenda";
+            document.getElementById('record-modal').classList.remove('hidden');
         }
-      }
-    ]
-  },
-  java: {
-    beginner: [
-      {
-        type: 'predict',
-        question: 'O que esse código Java vai imprimir?',
-        context: 'Analise o código e identifique a saída.',
-        code: `<span class="kw">public class</span> <span class="fn">Main</span> {\n  <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {\n    System.out.<span class="fn">println</span>(<span class="str">"Java"</span>);\n    System.out.<span class="fn">println</span>(<span class="num">2</span> + <span class="num">3</span>);\n    System.out.<span class="fn">println</span>(<span class="str">"2"</span> + <span class="str">"3"</span>);\n  }\n}`,
-        options: ['Java\n5\n23', 'Java\n5\n5', 'Java\n23\n23', 'Erro de compilação'],
-        correct: 0,
-        feedback: {
-          success: '✓ Correto! <code>2 + 3</code> soma inteiros → <code>5</code>. Mas <code>"2" + "3"</code> concatena Strings → <code>"23"</code>. Em Java, o <code>+</code> se comporta diferente com tipos diferentes.',
-          error: 'Cuidado com os tipos! <code>2 + 3</code> é soma de inteiros (5). Mas <code>"2" + "3"</code> é concatenação de String ("23"). Em Java, o operador <code>+</code> depende do tipo.'
+
+        // Abre modal de edição carregando os dados do registo
+        function openEditModal(id) {
+            const order = orders.find(o => o.id === id);
+            if (!order) return;
+
+            document.getElementById('form-id').value = order.id;
+            document.getElementById('form-name').value = order.nome;
+            document.getElementById('form-class').value = order.turma;
+            document.getElementById('form-enrollment').value = order.matricula || '';
+            document.getElementById('form-email').value = order.email || '';
+            document.getElementById('form-phone').value = order.telefone || '';
+            document.getElementById('form-size').value = order.tamanho === 'XG' ? 'XGG' : order.tamanho;
+            document.getElementById('form-babylook').value = order.babyLook;
+            document.getElementById('form-quantity').value = order.quantidade;
+            document.getElementById('form-payment').value = order.pagamento;
+            document.getElementById('form-proof').value = order.comprovativo || '';
+            document.getElementById('form-notes').value = order.notas || '';
+
+            document.getElementById('modal-title').innerText = "Editar Encomenda";
+            document.getElementById('record-modal').classList.remove('hidden');
         }
-      },
-      {
-        type: 'fill',
-        question: 'Complete a declaração das variáveis em Java:',
-        context: 'Java é uma linguagem tipada — você precisa declarar o tipo de cada variável.',
-        code: `<span class="blank"><input class="fill-input" id="fill_j0_0" placeholder="tipo..."></span> idade = <span class="num">18</span>;\n<span class="blank"><input class="fill-input" id="fill_j0_1" placeholder="tipo..."></span> nome = <span class="str">"Carlos"</span>;\nSystem.out.<span class="fn">println</span>(nome + <span class="str">" tem "</span> + idade);`,
-        blanks: [
-          { id: 'fill_j0_0', answer: 'int' },
-          { id: 'fill_j0_1', answer: 'String' }
-        ],
-        feedback: {
-          success: '✓ Perfeito! Em Java: <code>int</code> para números inteiros e <code>String</code> para textos (com S maiúsculo).',
-          error: 'Em Java: use <code>int</code> para o número 18, e <code>String</code> (com S maiúsculo!) para o texto "Carlos".'
+
+        // Fecha modal
+        function closeModal() {
+            document.getElementById('record-modal').classList.add('hidden');
         }
-      },
-      {
-        type: 'fix',
-        question: 'Esse código Java tem um erro de compilação. Qual opção está correta?',
-        context: 'Identifique o problema na sintaxe.',
-        code: `<span class="kw">int</span> x = <span class="num">10</span>\n<span class="kw">int</span> y = <span class="num">5</span>\nSystem.out.<span class="fn">println</span>(x + y)`,
-        options: [
-          'int x = 10;\nint y = 5;\nSystem.out.println(x + y);',
-          'int x = 10,\nint y = 5,\nSystem.out.println(x + y)',
-          'var x = 10\nvar y = 5\nprint(x + y)',
-          'integer x = 10;\ninteger y = 5;\nSystem.out.println(x+y);'
-        ],
-        correct: 0,
-        feedback: {
-          success: '✓ Isso! Em Java, toda instrução termina com <code>;</code> (ponto e vírgula). Esquecer o ponto e vírgula é um dos erros mais comuns.',
-          error: 'Em Java, cada instrução deve terminar com <code>;</code>. A versão correta adiciona ponto e vírgula no final de cada linha de código.'
+
+        // Guarda ou Atualiza os dados do formulário
+        function saveRecord(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('form-id').value;
+            const orderData = {
+                id: id || Date.now().toString(),
+                timestamp: id ? (orders.find(o => o.id === id).timestamp) : new Date().toLocaleString(),
+                nome: document.getElementById('form-name').value,
+                turma: document.getElementById('form-class').value,
+                matricula: document.getElementById('form-enrollment').value,
+                email: document.getElementById('form-email').value,
+                telefone: document.getElementById('form-phone').value,
+                tamanho: document.getElementById('form-size').value,
+                babyLook: document.getElementById('form-babylook').value,
+                quantidade: Number(document.getElementById('form-quantity').value),
+                pagamento: document.getElementById('form-payment').value,
+                comprovativo: document.getElementById('form-proof').value,
+                notas: document.getElementById('form-notes').value,
+                duplicado: id ? (orders.find(o => o.id === id).duplicado) : false
+            };
+
+            if (id) {
+                // Modo Edição
+                orders = orders.map(o => o.id === id ? orderData : o);
+            } else {
+                // Modo Criação
+                orders.push(orderData);
+            }
+
+            saveToStorage();
+            closeModal();
+            applyFilters();
+            updateMetrics();
         }
-      },
-      {
-        type: 'predict',
-        question: 'Qual o valor impresso pelo seguinte código?',
-        context: 'Acompanhe o valor da variável a cada passo.',
-        code: `<span class="kw">int</span> n = <span class="num">10</span>;\nn = n + <span class="num">5</span>;\nn = n * <span class="num">2</span>;\nSystem.out.<span class="fn">println</span>(n);`,
-        options: ['30', '25', '20', '15'],
-        correct: 0,
-        feedback: {
-          success: '✓ Correto! Passo a passo: <code>n = 10</code> → <code>n = 10 + 5 = 15</code> → <code>n = 15 * 2 = 30</code>.',
-          error: 'Siga passo a passo: começa em 10, soma 5 (fica 15), multiplica por 2 (fica 30). Resultado: 30.'
+
+        // Persiste dados localmente no navegador
+        function saveToStorage() {
+            localStorage.setItem('fardas_orders', JSON.stringify(orders));
         }
-      }
-    ],
-    intermediate: [
-      {
-        type: 'fill',
-        question: 'Complete o loop for para somar os números de 1 a 10:',
-        context: 'O for em Java tem três partes: inicialização, condição e incremento.',
-        code: `<span class="kw">int</span> soma = <span class="num">0</span>;\n<span class="kw">for</span> (<span class="kw">int</span> i = <span class="blank"><input class="fill-input" id="fill_ji0_0" placeholder="..."></span>; i <= <span class="blank"><input class="fill-input" id="fill_ji0_1" placeholder="..."></span>; i++) {\n    soma += i;\n}\nSystem.out.<span class="fn">println</span>(soma);`,
-        blanks: [
-          { id: 'fill_ji0_0', answer: '1' },
-          { id: 'fill_ji0_1', answer: '10' }
-        ],
-        feedback: {
-          success: '✓ Exato! <code>i = 1</code> começa do 1, <code>i <= 10</code> vai até o 10 (inclusivo). A soma de 1 a 10 é 55.',
-          error: 'O loop precisa começar em <code>1</code> e a condição deve ser <code>i <= 10</code> para incluir o 10.'
+
+        // Exportação simplificada para ficheiro CSV (Compatível com Excel)
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // BOM para garantir os acentos no Excel
+            csvContent += "Data/Hora,Email,Nome Completo,Matrícula,Turma,Telefone,Tamanho,Baby Look,Quantidade,Forma de Pagamento,Notas,Comprovativo\n";
+
+            orders.forEach(o => {
+                const row = [
+                    `"${o.timestamp}"`,
+                    `"${o.email}"`,
+                    `"${o.nome}"`,
+                    `"${o.matricula || ''}"`,
+                    `"${o.turma}"`,
+                    `"${o.telefone}"`,
+                    `"${o.tamanho}"`,
+                    `"${o.babyLook}"`,
+                    `"${o.quantidade}"`,
+                    `"${o.pagamento}"`,
+                    `"${o.notas || ''}"`,
+                    `"${o.comprovativo || ''}"`
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Encomendas_Fardas_IFJC_GEFA_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-      },
-      {
-        type: 'predict',
-        question: 'O que o método retorna quando chamado com verificar(7)?',
-        context: 'Leia o método com atenção e trace a execução.',
-        code: `<span class="kw">static</span> String <span class="fn">verificar</span>(<span class="kw">int</span> n) {\n    <span class="kw">if</span> (n % <span class="num">2</span> == <span class="num">0</span>) {\n        <span class="kw">return</span> <span class="str">"par"</span>;\n    } <span class="kw">else</span> {\n        <span class="kw">return</span> <span class="str">"ímpar"</span>;\n    }\n}\nSystem.out.<span class="fn">println</span>(<span class="fn">verificar</span>(<span class="num">7</span>));`,
-        options: ['"ímpar"', '"par"', '0', '1'],
-        correct: 0,
-        feedback: {
-          success: '✓ Correto! <code>7 % 2 = 1</code>, não é 0, então a condição <code>n % 2 == 0</code> é falsa. O método retorna <code>"ímpar"</code>.',
-          error: '<code>7 % 2 = 1</code> (resto 1), então <code>n % 2 == 0</code> é <code>false</code>. O método cai no <code>else</code> e retorna <code>"ímpar"</code>.'
-        }
-      },
-      {
-        type: 'fix',
-        question: 'O código deveria criar um array e imprimir o terceiro elemento. O que está errado?',
-        context: 'Arrays em Java têm índices que começam em 0.',
-        code: `<span class="kw">int</span>[] numeros = {<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>};\nSystem.out.<span class="fn">println</span>(numeros[<span class="num">3</span>]); <span class="cm">// queremos 30</span>`,
-        options: [
-          'numeros[2] → índices começam em 0',
-          'numeros[3] está certo',
-          'numeros(3) → usar parênteses',
-          'numeros.get(3) → usar método'
-        ],
-        correct: 0,
-        feedback: {
-          success: '✓ Exato! Arrays começam no índice 0. Então: índice 0→10, 1→20, 2→30, 3→40. Para o terceiro elemento (30), use índice <code>2</code>.',
-          error: 'Em Java (e na maioria das linguagens), arrays começam no índice <code>0</code>. Elemento 1→índice 0, elemento 2→índice 1, elemento 3→índice 2.'
-        }
-      },
-      {
-        type: 'fill',
-        question: 'Complete a classe com um construtor básico:',
-        context: 'O construtor em Java tem o mesmo nome da classe e não tem tipo de retorno.',
-        code: `<span class="kw">public class</span> <span class="fn">Pessoa</span> {\n    String nome;\n    <span class="kw">int</span> idade;\n\n    <span class="kw">public</span> <span class="blank"><input class="fill-input" id="fill_ji2_0" placeholder="..."></span>(String n, <span class="kw">int</span> i) {\n        <span class="blank"><input class="fill-input" id="fill_ji2_1" placeholder="..."></span>.nome = n;\n        this.idade = i;\n    }\n}`,
-        blanks: [
-          { id: 'fill_ji2_0', answer: 'Pessoa' },
-          { id: 'fill_ji2_1', answer: 'this' }
-        ],
-        feedback: {
-          success: '✓ Perfeito! O construtor tem o mesmo nome da classe (<code>Pessoa</code>). O <code>this</code> referencia o objeto atual, diferenciando o atributo da classe do parâmetro.',
-          error: 'O construtor deve ter o mesmo nome da classe: <code>Pessoa</code>. E use <code>this.nome</code> para referenciar o atributo do objeto, não o parâmetro.'
-        }
-      }
-    ]
-  }
-};
 
-// ─── STATE ────────────────────────────────────────────
-let state = {
-  lang: 'python',
-  level: 'beginner',
-  currentChallenge: 0,
-  score: 0,
-  answered: false,
-  totalBeginnerScore: 0
-};
-
-// ─── GAME FLOW ────────────────────────────────────────
-function startGame(lang) {
-  state.lang = lang;
-  state.level = 'beginner';
-  state.currentChallenge = 0;
-  state.score = 0;
-  state.answered = false;
-
-  document.getElementById('gameLangBadge').textContent = lang === 'python' ? '🐍 Python' : '☕ Java';
-  document.getElementById('gameLangBadge').className = 'game-lang-badge ' + lang;
-  document.getElementById('scoreDisplay').textContent = '0';
-
-  document.querySelectorAll('.level-tab').forEach((t,i) => {
-    t.classList.toggle('active', i === 0);
-  });
-
-  document.getElementById('language-select').style.display = 'none';
-  document.getElementById('game-area').classList.add('active');
-  renderChallenge();
-
-  document.getElementById('game-area').scrollIntoView({ behavior: 'smooth' });
-}
-
-function backToLanguages() {
-  document.getElementById('game-area').classList.remove('active');
-  document.getElementById('language-select').style.display = '';
-  document.getElementById('language-select').scrollIntoView({ behavior: 'smooth' });
-}
-
-function setLevel(level) {
-  state.level = level;
-  state.currentChallenge = 0;
-  state.answered = false;
-  document.querySelectorAll('.level-tab').forEach((t,i) => {
-    t.classList.toggle('active', (i===0 && level==='beginner') || (i===1 && level==='intermediate'));
-  });
-  renderChallenge();
-}
-
-function getChallengeset() {
-  return challenges[state.lang][state.level];
-}
-
-function renderChallenge() {
-  const set = getChallengeset();
-  const total = set.length;
-  const idx = state.currentChallenge;
-
-  document.getElementById('progressText').textContent = `Desafio ${idx+1} de ${total}`;
-  document.getElementById('levelLabel').textContent = state.level === 'beginner' ? 'INICIANTE' : 'INTERMEDIÁRIO';
-  document.getElementById('progressFill').style.width = ((idx)/total*100) + '%';
-  document.getElementById('gameTitle').textContent = state.level === 'beginner' ? 'Nível Iniciante' : 'Nível Intermediário';
-
-  const ch = set[idx];
-  const container = document.getElementById('challengeContainer');
-  container.innerHTML = '';
-  state.answered = false;
-
-  const card = document.createElement('div');
-  card.className = 'challenge-card active';
-
-  const typeLabels = {
-    predict: 'Prever saída',
-    fill: 'Completar código',
-    fix: 'Corrigir erro',
-    logic: 'Lógica'
-  };
-
-  let bodyHTML = `
-    <div class="challenge-header">
-      <div class="challenge-type"><div class="type-dot"></div>${typeLabels[ch.type] || ch.type}</div>
-      <div class="challenge-num">#${String(idx+1).padStart(2,'0')}</div>
-    </div>
-    <div class="challenge-body">
-      <div class="challenge-question">${ch.question}</div>
-      <div class="challenge-context">${ch.context}</div>
-      <div class="code-block">${ch.code}</div>`;
-
-  if (ch.type === 'predict' || ch.type === 'fix') {
-    bodyHTML += `<div class="choices" id="choices">`;
-    ch.options.forEach((opt, i) => {
-      bodyHTML += `<button class="choice-btn" onclick="selectChoice(${i})">${opt.replace(/\n/g,'<br>')}</button>`;
-    });
-    bodyHTML += `</div>`;
-  }
-
-  if (ch.type === 'fill') {
-    bodyHTML += `<div class="challenge-actions">
-      <button class="run-btn" onclick="checkFill()">▶ Verificar</button>
-    </div>`;
-  } else {
-    bodyHTML += `<div class="challenge-actions" id="actionBar">
-      <button class="next-btn" id="nextBtn" onclick="nextChallenge()">Próximo →</button>
-    </div>`;
-  }
-
-  bodyHTML += `<div class="feedback-box" id="feedbackBox">
-    <div class="feedback-status" id="feedbackStatus"></div>
-    <div class="feedback-text" id="feedbackText"></div>
-  </div>`;
-
-  bodyHTML += `</div>`;
-  card.innerHTML = bodyHTML;
-  container.appendChild(card);
-}
-
-function selectChoice(idx) {
-  if (state.answered) return;
-  state.answered = true;
-  const ch = getChallengeset()[state.currentChallenge];
-  const btns = document.querySelectorAll('.choice-btn');
-  const isCorrect = idx === ch.correct;
-
-  btns[idx].classList.add(isCorrect ? 'correct' : 'wrong');
-  if (!isCorrect) btns[ch.correct].classList.add('correct');
-
-  if (isCorrect) state.score += 10;
-  document.getElementById('scoreDisplay').textContent = state.score;
-
-  showFeedback(isCorrect, ch.feedback);
-  document.getElementById('nextBtn').classList.add('show');
-}
-
-function checkFill() {
-  if (state.answered) return;
-  state.answered = true;
-  const ch = getChallengeset()[state.currentChallenge];
-  let allCorrect = true;
-
-  ch.blanks.forEach(b => {
-    const inp = document.getElementById(b.id);
-    if (!inp) return;
-    const val = inp.value.trim();
-    const ok = val.toLowerCase() === b.answer.toLowerCase();
-    if (!ok) allCorrect = false;
-    inp.style.borderColor = ok ? 'var(--success)' : 'var(--error)';
-    inp.style.color = ok ? 'var(--success)' : 'var(--error)';
-  });
-
-  if (allCorrect) state.score += 10;
-  document.getElementById('scoreDisplay').textContent = state.score;
-
-  showFeedback(allCorrect, ch.feedback);
-
-  const actionBar = document.querySelector('.challenge-actions');
-  const nextBtn = document.createElement('button');
-  nextBtn.className = 'next-btn show';
-  nextBtn.textContent = 'Próximo →';
-  nextBtn.onclick = nextChallenge;
-  actionBar.appendChild(nextBtn);
-}
-
-function showFeedback(success, feedback) {
-  const box = document.getElementById('feedbackBox');
-  const status = document.getElementById('feedbackStatus');
-  const text = document.getElementById('feedbackText');
-
-  box.className = 'feedback-box show ' + (success ? 'success' : 'error');
-  status.textContent = success ? '✓ Correto!' : '✗ Não foi dessa vez...';
-  text.innerHTML = success ? feedback.success : feedback.error;
-}
-
-function nextChallenge() {
-  const set = getChallengeset();
-  state.currentChallenge++;
-
-  if (state.currentChallenge >= set.length) {
-    // Level complete
-    document.getElementById('progressFill').style.width = '100%';
-    showCelebration();
-    return;
-  }
-  renderChallenge();
-}
-
-// ─── CELEBRATION ──────────────────────────────────────
-function showCelebration() {
-  const cel = document.getElementById('celebration');
-  cel.classList.add('show');
-  const isLast = state.level === 'intermediate';
-  document.getElementById('celSub').textContent = isLast
-    ? `Você completou TODOS os desafios de ${state.lang === 'python' ? 'Python' : 'Java'}! Pontuação: ${state.score}`
-    : `Fase concluída! Pontuação: ${state.score}. Avance para o nível intermediário!`;
-  startParticles();
-}
-
-function closeCelebration() {
-  document.getElementById('celebration').classList.remove('show');
-  stopParticles();
-  if (state.level === 'beginner') {
-    setLevel('intermediate');
-    document.querySelectorAll('.level-tab')[1].classList.add('active');
-    document.querySelectorAll('.level-tab')[0].classList.remove('active');
-  } else {
-    backToLanguages();
-  }
-}
-
-// ─── PARTICLES ────────────────────────────────────────
-let particleRAF;
-function startParticles() {
-  const canvas = document.getElementById('particleCanvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const colors = ['#e8ff3c','#ff5c35','#3cffe0','#a8ff3c','#fff'];
-  const particles = Array.from({length:80}, () => ({
-    x: Math.random() * canvas.width,
-    y: -20,
-    r: Math.random() * 6 + 2,
-    c: colors[Math.floor(Math.random()*colors.length)],
-    vy: Math.random() * 3 + 2,
-    vx: (Math.random() - .5) * 2,
-    rot: Math.random() * 360,
-    rotV: (Math.random()-.5)*4
-  }));
-  function frame() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(p => {
-      p.y += p.vy; p.x += p.vx; p.rot += p.rotV;
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot * Math.PI/180);
-      ctx.fillStyle = p.c;
-      ctx.fillRect(-p.r, -p.r, p.r*2, p.r*2);
-      ctx.restore();
-      if(p.y > canvas.height) { p.y = -20; p.x = Math.random()*canvas.width; }
-    });
-    particleRAF = requestAnimationFrame(frame);
-  }
-  frame();
-}
-function stopParticles() {
-  cancelAnimationFrame(particleRAF);
-  const canvas = document.getElementById('particleCanvas');
-  canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
-}
-</script>
+        // Executa na carga inicial da página
+        window.onload = function() {
+            updateMetrics();
+            applyFilters();
+        };
+    </script>
 </body>
 </html>
+
+```
